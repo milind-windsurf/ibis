@@ -30,12 +30,12 @@ class ParquetOptTimeFunctionsTest(unittest.TestCase):
 
         if "".join(expected_xml) != "".join(test_xml):
             same = False
-            print ""
-            print test_xml
-            print expected_xml
-            print "XML strings don't match."
+            print("")
+            print(test_xml)
+            print(expected_xml)
+            print("XML strings don't match.")
             diff = difflib.unified_diff(test_xml, expected_xml)
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
         return same
 
     @patch('lib.ingest.parquet_opt_ddl_time.ConnectionManager', autospec=True)

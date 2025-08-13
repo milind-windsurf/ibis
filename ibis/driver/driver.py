@@ -639,7 +639,7 @@ class Driver(object):
         # Break up list of generated files into multiple lists
         max_tbl_per_wrkflw = self.cfg_mgr.max_table_per_workflow
         workflows_chunks = []
-        for num in xrange(0, len(generated_workflows), max_tbl_per_wrkflw):
+        for num in range(0, len(generated_workflows), max_tbl_per_wrkflw):
             _grouped_wf = generated_workflows[num:num + max_tbl_per_wrkflw]
             workflows_chunks.append(_grouped_wf)
         return workflows_chunks
@@ -880,7 +880,7 @@ class Driver(object):
         except IndexError as err:
             msg += 'Please provide an appropriate --to {db}.{table}'
             self.logger.error('Error found in driver.export - '
-                              'reason: %s ' % err.message)
+                              'reason: %s ' % str(err))
         return msg
 
     def export_database(self, tables):
@@ -1001,7 +1001,7 @@ class Driver(object):
     def auth_test(self, jdbc_url, source_db, source_table, user_name,
                   password_file):
         """Test sqoop auth"""
-        print jdbc_url, source_db, source_table, user_name, password_file
+        print(jdbc_url, source_db, source_table, user_name, password_file)
         auth_obj = AuthTest(self.cfg_mgr, source_db, source_table, jdbc_url)
         status = auth_obj.verify(user_name, password_file)
         if not status:
@@ -1086,7 +1086,7 @@ class Driver(object):
                     self.logger.error('Error found in driver.retrieve'
                                       '_backup, exit '
                                       'from process with errors. '
-                                      'Subprocess error: %s' % e.message)
+                                      'Subprocess error: %s' % str(e))
                     raise ValueError('Failed')
             else:
                 msg += 'Target directory doesn\'t exist in it_table.\n'
@@ -1148,7 +1148,7 @@ class Driver(object):
                               'load value'.\
                     format(table=table['full_table_name'])
                 self.logger.error('Error found in driver.update_'
-                                  'all_lifespan -reason %s ' % ie.message)
+                                  'all_lifespan -reason %s ' % str(ie))
         return msg
 
     def update_it_table_export(self, request_tables, msg):

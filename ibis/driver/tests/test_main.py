@@ -2,7 +2,7 @@
 import unittest
 import os
 from argparse import Namespace
-from StringIO import StringIO
+from io import StringIO
 from mock import patch, MagicMock, mock_open
 import ibis.driver.main
 import ibis
@@ -144,7 +144,7 @@ class MainFunctionsTest(unittest.TestCase):
         with patch('sys.argv', mock_sys):
             with patch('ibis.driver.main.gen_it_table') as mock_gen_it_table:
                 ibis.driver.main.gen_it_table(args)
-                print args
+                print(args)
                 mock_gen_it_table.assert_called_with(args)
 
     def test_auth_test_invoke(self):
@@ -165,7 +165,7 @@ class MainFunctionsTest(unittest.TestCase):
             with patch('ibis.driver.driver.'
                        'Driver.auth_test') as mock_driver_auth_test:
                 ibis.driver.driver.Driver.auth_test(args)
-                print args
+                print(args)
                 mock_driver_auth_test.assert_called_with(args)
 
     def test_run_job(self):

@@ -117,7 +117,7 @@ class TestChecksBalancesExportManager(unittest.TestCase):
         mock2.return_value = (200, Workflow(one_job_json))
         tables = self.cb_manager.get_workflow_job(
             "test")
-        print tables
+        print(tables)
         self.assertEquals(tables, Workflow(one_job_json))
 
     @patch.object(ChecksBalancesExportHelper, "get_jobs")
@@ -131,7 +131,7 @@ class TestChecksBalancesExportManager(unittest.TestCase):
         mock2.return_value = (500, Workflow(one_job_json))
         tables = self.cb_manager.get_workflow_job(
             "test")
-        print tables
+        print(tables)
         self.assertFalse(tables, Workflow(one_job_json))
 
     @patch("lib.ingest.checks_and_balances_export.requests.get")
@@ -172,7 +172,7 @@ class TestChecksBalancesExportManager(unittest.TestCase):
         self.actions = [{'test': 'test'}]
         tables = self.cb_manager.check_if_workflow(
             "test")
-        print tables
+        print(tables)
         self.assertEquals(tables, Workflow(one_job_json))
 
     @patch.object(ChecksBalancesExportHelper, "get_jobs")
@@ -192,7 +192,7 @@ class TestChecksBalancesExportManager(unittest.TestCase):
         self.actions = [{'test': 'test'}]
         tables = self.cb_manager.check_if_workflow_actions(
             "test")
-        print tables
+        print(tables)
         self.assertTrue(tables, Workflow(one_job_json))
 
     @patch("subprocess.call")
@@ -237,7 +237,7 @@ class TestChecksBalancesExportManager(unittest.TestCase):
         status, workflow = self.ooz.get_job(id_val)
         sorted_actions = self.cb_manager.sort_actions(workflow)
         self.assertTrue('test' in sorted_actions.keys())
-        print len(sorted_actions['test'])
+        print(len(sorted_actions['test']))
         self.assertEquals(len(sorted_actions['test']), 6)
 
     @patch.object(ChecksBalancesExportManager, "get_parquet_size")

@@ -30,14 +30,14 @@ def get_running_host():
         elif output == 'fake.int.edgenode\n' or is_int:
             host = 'fake.int.impala'
         else:
-            print 'Error: unknown host'
+            print('Error: unknown host')
     else:
-        print output
-        print err
-        print 'Error: hostname command failed'
+        print(output)
+        print(err)
+        print('Error: hostname command failed')
 
     if host:
-        print 'hostname: ', host
+        print('hostname: ', host)
     else:
         raise ValueError('Error: Could not determine hive host to connect')
     return host
@@ -71,7 +71,7 @@ def sqoop_standalone_setup():
                                      stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
         output, err = sqoop_dir.communicate()
-        print output, err
+        print(output, err)
 
     for jar in jars:
         HADOOP_CLASSPATH.append('{0}/sqoop_jars/{1}'.format(current_dir, jar))
@@ -89,8 +89,8 @@ def sqoop_standalone_setup():
         if proc.returncode != 0:
             _msg = 'hdfs get failed for /user/dev/oozie/share/lib/sqoop/{0}'
             _msg = _msg.format(jar)
-            print _msg
-            print output, err
+            print(_msg)
+            print(output, err)
 
     HADOOP_CLASSPATH = ','.join(HADOOP_CLASSPATH)
     SQOOPJARS = ','.join(SQOOPJARS)

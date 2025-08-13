@@ -360,7 +360,7 @@ class SourceTable(object):
                     msg = msg.format(split_by_column,
                                      self.it_table_obj.split_by)
                     self.logger.info(msg)
-        except Exception, msg:
+        except Exception as msg:
             self.logger.error(msg)
             self.logger.error(traceback.format_exc())
         return split_by_column
@@ -403,7 +403,7 @@ class SourceTable(object):
         :return: writes out a file
         """
         if it_table_string:
-            file_permission = 0774
+            file_permission = 0o774
             with open(write_path, 'w') as file_obj:
                 file_obj.write(it_table_string)
                 self.logger.info(
@@ -576,7 +576,7 @@ class DB2Table(SourceTable):
             if colnames and any(colnames):
                 for name in int_columns[0]:
                     for item in colnames:
-                        print "name ", name
+                        print("name ", name)
                         if name in item:
                             unique_key = name
                             break

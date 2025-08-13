@@ -9,7 +9,7 @@ import subprocess
 
 import requests
 from requests_kerberos import HTTPKerberosAuth
-from py_hdfs import PyHDFS
+from hdfs import InsecureClient as PyHDFS
 from impala_utils import ImpalaConnect
 
 _PIPE = '|'
@@ -227,8 +227,8 @@ class ChecksBalancesExportHelper(object):
             my_json = json.dumps(r.json())
             job = Job(my_json)
         else:
-            print "Error retrieving all jobs. Error code: {status}".format(
-                status=r.status_code)
+            print("Error retrieving all jobs. Error code: {status}".format(
+                status=r.status_code))
         return r.status_code, job
 
     def get_job(self, id_val):
@@ -244,7 +244,7 @@ class ChecksBalancesExportHelper(object):
         else:
             err_msg = "Error retrieving job, {id_val}. Error code: {status}"
             err_msg = err_msg.format(id_val=id_val, status=r.status_code)
-            print err_msg
+            print(err_msg)
         return r.status_code, workflow_job
 
 
@@ -334,7 +334,7 @@ class ChecksBalancesExportManager(object):
             # Not OK
             err_msg = "Error, {status}, retrieving app name, {app_name}."
             err_msg = err_msg.format(status=status, app_name=app_name)
-            print err_msg
+            print(err_msg)
         else:
             workflows = job.get_workflows()
 
@@ -435,7 +435,7 @@ class ChecksBalancesExportManager(object):
                     "checks_and_balances_export.get_input_records "
                     "- reason %s" % ie.message)
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return records
 
     def get_output_records(self, sqoop_action):
@@ -456,7 +456,7 @@ class ChecksBalancesExportManager(object):
                 err_msg = err_msg % ie.message
                 raise Exception(err_msg)
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return records
 
     def get_sqoop_duration(self, sqoop_action):
@@ -472,7 +472,7 @@ class ChecksBalancesExportManager(object):
                 sqoop_action.get_end_time(), '%a, %d %b %Y %H:%M:%S %Z')
             time = (end - start).total_seconds()
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return int(time)
 
     def get_directory(self, action):
@@ -511,7 +511,7 @@ class ChecksBalancesExportManager(object):
                 err_msg = err_msg % ie.message
                 raise Exception(err_msg)
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return size
 
     def get_parquet_time(self, table_name, actions):
@@ -623,7 +623,7 @@ class ChecksBalancesExportManager(object):
             stats['table_name'] = self.get_table_name(action)
             stats['directory'] = self.get_directory(action)
         else:
-            print 'Expecting an export prep action'
+            print('Expecting an export prep action')
         return stats
 
     def validate_in_and_out_counts(self, action):
@@ -651,7 +651,7 @@ class ChecksBalancesExportManager(object):
             stats['export_timestamp'] = action.get_start_time()
             stats['txt_size'] = self.get_txt_size(action)
         else:
-            print 'Expecting an export action.'
+            print('Expecting an export action.')
         return stats
 
     def get_parquet_size(self, table_name, target_dir):
@@ -852,7 +852,7 @@ class ChecksBalancesExportManager(object):
     def check_if_workflow_actions(self, app_name):
         workflow_job = self.get_workflow_job(app_name)
         actions = workflow_job.get_actions()
-        print "actions", actions
+        print("actions", actions)
         return actions
 
 if __name__ == "__main__":

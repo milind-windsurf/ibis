@@ -18,7 +18,7 @@ class SubWF(Action):
                                      self.params['ok'],
                                      self.params['error'],
                                      self.params['cfg_mgr'])
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Shell KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting shell action type')

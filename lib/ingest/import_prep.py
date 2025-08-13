@@ -2,7 +2,10 @@
 
 import sys
 import socket
-from itertools import izip
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 from impala_utils import ImpalaConnect
 
 
@@ -30,8 +33,8 @@ class CacheTable(object):
             row = ImpalaConnect.run_query(self.it_table_host, self.it_table,
                                           query, op='select')
         except socket.error as err:
-            print "Socket error({0}): {1}".format(err.errno, err.strerror)
-            print 'Trying again...'
+            print("Socket error({0}): {1}".format(err.errno, err.strerror))
+            print('Trying again...')
             row = ImpalaConnect.run_query(self.it_table_host, self.it_table,
                                           query, op='select')
 
@@ -74,7 +77,7 @@ class CacheTable(object):
 
 if __name__ == '__main__':
     if len(sys.argv) != 6:
-        print "ERROR----> command line args are not proper"
+        print("ERROR----> command line args are not proper")
         sys.exit(1)
 
     params = {

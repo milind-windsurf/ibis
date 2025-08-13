@@ -1,5 +1,5 @@
 """Config Manager."""
-import ConfigParser
+import configparser
 import os
 import sys
 import random
@@ -26,7 +26,7 @@ class ConfigManager(object):
 
         env_prop_file = '{env}.properties'.format(env=environment.lower())
         prop_path = resource_filename('resources', env_prop_file)
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(prop_path)
 
         # This is the base dir of this particular file
@@ -189,7 +189,7 @@ class ConfigManager(object):
             # to make wf generation for all envs possible on prod host
             env_prop_file = '{env}.properties'.format(env=self.for_env.lower())
             prop_path = resource_filename('resources', env_prop_file)
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.read(prop_path)
             # override the values
             self.it_table = config.get('Database', 'it_table')
@@ -212,19 +212,19 @@ class ConfigManager(object):
 
     def rand_name(self):
         """creates random string"""
-        val = ''.join(random.choice(string.lowercase) for i in range(10))
+        val = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
         return val
 
     def create_path(self, path):
         """Create path when not exists"""
         try:
-            file_permission = 0774
+            file_permission = 0o774
             if not os.path.exists(path):
                 os.makedirs(path)
                 os.chmod(path, file_permission)
         except Exception as e:
-            print "Error: could not create workflow directory, details %s" % e
-            print 'Check for unix permissions. Exiting now...'
+            print("Error: could not create workflow directory, details %s" % e)
+            print('Check for unix permissions. Exiting now...')
             sys.exit(1)
 
     def read_config_wf_props(self, config_workflow_properties):
@@ -235,7 +235,7 @@ class ConfigManager(object):
         prop_file = '{config_wf_props}.properties'.format(
             config_wf_props=config_workflow_properties.lower())
         prop_path = resource_filename('resources', prop_file)
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(prop_path)
         return config
 

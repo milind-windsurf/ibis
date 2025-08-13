@@ -381,7 +381,7 @@ class ItTableExport(object):
                 msg = '{0} did not match. {1} != {2}'
                 msg = msg.format(prp, getattr(self, prp),
                                  getattr(other, prp))
-                print msg
+                print(msg)
                 break
         return isinstance(other, self.__class__) and status
 

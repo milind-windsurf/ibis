@@ -83,19 +83,19 @@ class ZookeeperLocks(object):
         if 'LOCK-' in name_of_lock.encode('ascii', 'ignore'):
             try:
                 self.zk_client.delete(name_of_lock)
-                print 'Deleted lock: {0}'.format(name_of_lock)
+                print('Deleted lock: {0}'.format(name_of_lock))
                 return "Deleted " + name_of_lock
             except NoNodeError:
-                print "No node error - delete lock: {0}".format(name_of_lock)
+                print("No node error - delete lock: {0}".format(name_of_lock))
         else:
             new_locks = ""
-            print "Need to go deeper", name_of_lock
+            print("Need to go deeper", name_of_lock)
             try:
                 new_locks = self.zk_client.get_children(name_of_lock + "/")
                 # this will return a list, but finish
                 # if the list is empty
             except NoNodeError:
-                print "No node error - get_children: {0}".format(name_of_lock)
+                print("No node error - get_children: {0}".format(name_of_lock))
             if len(new_locks) > 0:
                 for a_lock in new_locks:
                     # for the next depth, go through
@@ -109,7 +109,7 @@ class ZookeeperLocks(object):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print "command line args are not proper"
+        print("command line args are not proper")
         sys.exit(1)
     view_info = sys.argv[1]
     zookeeper_hosts = sys.argv[2]  # zookeeper quorom
@@ -121,9 +121,9 @@ if __name__ == "__main__":
                                  database.strip(),
                                  table.strip())
             current_db = zkl.path_setup()
-            print '-' * 100
-            print 'Looking for locks on {0}.{1}'.format(database.strip(),
-                                                        table.strip())
+            print('-' * 100)
+            print('Looking for locks on {0}.{1}'.format(database.strip(),
+                                                        table.strip()))
             zkl.my_rec(current_db)
             zkl.shutdown()
-    print '-' * 100
+    print('-' * 100)

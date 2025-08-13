@@ -15,7 +15,7 @@ from abc import ABCMeta
 from sqoop_utils import SqoopUtils
 from impala_utils import ImpalaConnect
 from checks_and_balances_export import ChecksBalancesExportManager
-from py_hdfs import PyHDFS
+from hdfs import InsecureClient as PyHDFS
 
 
 LOG_FILE = 'qa.log'
@@ -406,7 +406,7 @@ def main():
 
 if __name__ == '__main__':
     if len(sys.argv) != 17:
-        print "ERROR----> command line args are not proper"
-        print len(sys.argv), sys.argv
+        print("ERROR----> command line args are not proper")
+        print(len(sys.argv), sys.argv)
         sys.exit(1)
     main()

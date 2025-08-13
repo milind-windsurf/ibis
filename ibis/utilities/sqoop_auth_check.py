@@ -35,7 +35,7 @@ def sqoop_standalone_setup():
                                      stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
         output, err = sqoop_dir.communicate()
-        print output, err
+        print(output, err)
 
     for jar in jars:
         HADOOP_CLASSPATH.append('{0}/sqoop_jars/{1}'.format(current_dir, jar))
@@ -51,9 +51,9 @@ def sqoop_standalone_setup():
         output, err = proc.communicate()
 
         if proc.returncode != 0:
-            print 'hdfs get failed for \
-                   /user/dev/oozie/share/lib/sqoop/{0}'.format(jar)
-            print output, err
+            print('hdfs get failed for \
+                   /user/dev/oozie/share/lib/sqoop/{0}'.format(jar))
+            print(output, err)
 
     HADOOP_CLASSPATH = ','.join(HADOOP_CLASSPATH)
     SQOOPJARS = ','.join(SQOOPJARS)

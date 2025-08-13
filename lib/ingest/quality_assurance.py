@@ -18,13 +18,18 @@ import decimal
 import math
 import json
 from abc import ABCMeta, abstractmethod
-from itertools import izip, ifilter
+from itertools import zip_longest
+try:
+    from itertools import izip, ifilter
+except ImportError:
+    izip = zip
+    ifilter = filter
 import voluptuous
 import sql_queries
 from sqoop_utils import SqoopUtils
 from impala_utils import ImpalaConnect
 from oozie_ws_helper import ChecksBalancesManager
-from py_hdfs import PyHDFS
+from hdfs import InsecureClient as PyHDFS
 
 
 LOG_FILE = 'qa.log'
@@ -108,7 +113,7 @@ class LogHandler(object):
                 "select status, * from ibis.qa_resultsv1 where log_time='{0}'")
         msg += '\n' + '#' * 100
         msg = msg.format(_time)
-        print msg
+        print(msg)
         logging.info('Inserted logs to Hive')
 
     def prepares_data(self, format_data):
@@ -1185,9 +1190,9 @@ class TableValidation(object):
         for index, src_col_data, target_col_data in \
                 izip(range(total_rows_cnt), src_rows, target_rows):
             column_match_list = []
-            print '=========================='
-            print src_col_data
-            print target_col_data
+            print('==========================')
+            print(src_col_data)
+            print(target_col_data)
             logger.info('--' * 20)
 
             for src_val, target_val, src_ddl, target_ddl \
@@ -1381,7 +1386,7 @@ class TableValidation(object):
                 hive_schema(data_input)
                 count += 1
             except voluptuous.Invalid as err:
-                print err
+                print(err)
                 logger.error(traceback.format_exc())
 
         if total_count == count:
@@ -1531,8 +1536,8 @@ def main():
             try:
                 bool_status = True  # val_obj.start_data_sampling()
             except Exception as ex:
-                print 'Data sampling failed'
-                print traceback.format_exc()
+                print('Data sampling failed')
+                print(traceback.format_exc())
                 bool_status = True
         elif args['ingestion_type'] == 'standalone_qa_sampling':
             target_table = 'parquet_stage.{database}_{table_name}'
@@ -1542,8 +1547,8 @@ def main():
             try:
                 bool_status = val_obj.start_data_sampling()
             except Exception as ex:
-                print 'Data sampling failed'
-                print traceback.format_exc()
+                print('Data sampling failed')
+                print(traceback.format_exc())
                 bool_status = True
         elif args['ingestion_type'] == 'incremental':
             incr_target_table = 'parquet_stage.{database}_{table_name}'
@@ -1581,7 +1586,7 @@ def main():
 
 if __name__ == '__main__':
     if len(sys.argv) != 14:
-        print "ERROR----> command line args are not proper"
-        print sys.argv
+        print("ERROR----> command line args are not proper")
+        print(sys.argv)
         sys.exit(1)
     main()

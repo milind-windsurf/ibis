@@ -58,8 +58,8 @@ class WorkflowGeneratorFunctionsTest(unittest.TestCase):
 
         if not self.strings_equal(test_str, expected_str):
             same = False
-            print "Generated test file:{0}".format(test_file)
-            print "Fix the file:{0}".format(expected_file)
+            print("Generated test file:{0}".format(test_file))
+            print("Fix the file:{0}".format(expected_file))
 
         test_fh.close()
         fo_gen.close()
@@ -74,11 +74,11 @@ class WorkflowGeneratorFunctionsTest(unittest.TestCase):
                         expected_str.splitlines()]
         if "".join(expected_str) != "".join(test_str):
             same = False
-            print '\n'
-            print '=' * 100
-            print "\nFiles don't match... "
+            print('\n')
+            print('=' * 100)
+            print("\nFiles don't match... ")
             diff = difflib.unified_diff(expected_str, test_str)
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
         return same
 
     def test_sort_table_prop_by_load(self):
@@ -96,7 +96,7 @@ class WorkflowGeneratorFunctionsTest(unittest.TestCase):
         expected = collections.OrderedDict(sorted(expected.items()))
         result = self.generator.sort_table_prop_by_load(tables)
         equals = True
-        for key, val in expected.iteritems():
+        for key, val in expected.items():
             if key in result:
                 for i, table in enumerate(val):
                     if not result[key][i] == table:
