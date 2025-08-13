@@ -227,14 +227,14 @@ class AUTOInventory(Inventory):
             appl_id=appl_id,
             host_name_prefix=self.cfg_mgr.edge_node.split('.', 1)[0],
             first_wld_job=first_wld_job, remaining_wld_jobs=remaining_wld_jobs)
-        file_name = '{name}.wld'.format(name=wld_file_name)
+        file_name = f'{wld_file_name}.wld'
         output_file = os.path.join(self.cfg_mgr.files, file_name)
         with open(output_file, "wb") as wld_fh:
             wld_fh.write(wld_content)
         return file_name
 
 
-class WldJob(object):
+class WldJob:
 
     """WLD file LINUX_JOB"""
 
@@ -245,7 +245,7 @@ class WldJob(object):
         self.next_job_name = next_job_name
 
 
-class AutoSequence(object):
+class AutoSequence:
 
     """Generates sequence of alphanumeric strings of length 2"""
 

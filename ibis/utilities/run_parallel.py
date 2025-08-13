@@ -29,7 +29,7 @@ def get_split_num(size, max_pool_size):
     return splits
 
 
-class DryRunWorkflowManager(object):
+class DryRunWorkflowManager:
     """Dry run workflows in parallel"""
 
     def __init__(self, cfg_mgr):
@@ -59,7 +59,7 @@ class DryRunWorkflowManager(object):
             pool_obj.terminate()
             for info in result_list:
                 if not info[0]:
-                    err_msg = 'Dry run failed: {0}'.format(info[1])
+                    err_msg = f'Dry run failed: {info[1]}'
                     self.logger.error(err_msg)
                     status = status and False
                 else:
@@ -84,7 +84,7 @@ def parallel_sqoop_output(info):
     return sql_stmt, result
 
 
-class SqoopCacheManager(object):
+class SqoopCacheManager:
     """Cache sqoop query results"""
 
     def __init__(self, cfg_mgr):

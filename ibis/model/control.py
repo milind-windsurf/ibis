@@ -10,7 +10,7 @@ from mako.template import Template
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class Control(object):
+class Control:
 
     def __init__(self, action_type, name, cfg_mgr):
         """Init."""
@@ -35,7 +35,7 @@ class Control(object):
         """Return XML workflow control."""
         try:
             template_file = str(files('resources.templates').joinpath(
-                '{action}.xml.mako'.format(action=self.action_type)))
+                f'{self.action_type}.xml.mako'))
         except (ImportError, AttributeError):
             template_file = resource_filename('resources.templates',
                                               '{action}.xml.mako'.

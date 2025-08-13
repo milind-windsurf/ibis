@@ -10,7 +10,7 @@ except ImportError:
     from pkg_resources import resource_filename
 
 
-class ConfigManager(object):
+class ConfigManager:
     """Ibis properties value manager.
     Reads from properties file and values can be accessed
     via the Config Manager. Requires path to properties file
@@ -27,7 +27,7 @@ class ConfigManager(object):
             if self.for_env:
                 self.for_env = self.for_env[0]
 
-        env_prop_file = '{env}.properties'.format(env=environment.lower())
+        env_prop_file = f'{environment.lower()}.properties'
         prop_path = resource_filename('resources', env_prop_file)
         config = configparser.RawConfigParser()
         config.read(prop_path)
@@ -190,7 +190,7 @@ class ConfigManager(object):
         """To generate workflow for dev/int on prod."""
         if 'dev' in self.for_env.lower() or 'int' in self.for_env.lower():
             # to make wf generation for all envs possible on prod host
-            env_prop_file = '{env}.properties'.format(env=self.for_env.lower())
+            env_prop_file = f'{self.for_env.lower()}.properties'
             prop_path = resource_filename('resources', env_prop_file)
             config = configparser.RawConfigParser()
             config.read(prop_path)
@@ -250,5 +250,5 @@ class ConfigManager(object):
         """Obj repr."""
         text = ''
         for data_attribute, value in vars(self).items():
-            text += "{0}: {1}\n".format(*(data_attribute, value))
+            text += "{}: {}\n".format(*(data_attribute, value))
         return text

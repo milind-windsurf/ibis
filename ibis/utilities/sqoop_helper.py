@@ -25,7 +25,7 @@ SQOOP_CACHE = {}
 SQOOP_CACHE_VIEW = {}
 
 
-class SqoopHelper(object):
+class SqoopHelper:
     """Sqoop eval runner."""
 
     def __init__(self, cfg_mgr):
@@ -93,7 +93,7 @@ class SqoopHelper(object):
                     'sqoop-eval', '--driver', driver, '--verbose',
                     '--connect', jdbc, '--query', sql_stmt, '--username',
                     db_username, '--password-file', password_file]
-            self.logger.info('Sqoop eval:  {stmt}'.format(stmt=sql_stmt))
+            self.logger.info(f'Sqoop eval:  {sql_stmt}')
 
             proc = subprocess.Popen(cmd_list, stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)

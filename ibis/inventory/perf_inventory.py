@@ -88,7 +88,7 @@ class PerfInventory(Inventory):
                                              src_view=src_view,
                                              queue_name=self.queue)
 
-            views_hql += "msck repair table {0};\n\n".format(
+            views_hql += "msck repair table {};\n\n".format(
                 view_full_name)
 
             file_name = table.db_env + '_' + getpass.getuser() + '_' + \
@@ -153,10 +153,10 @@ class PerfInventory(Inventory):
         reingest specifies if team space needs to be populated
         """
         if reingest:
-            del_all_tables = "drop database {0} cascade".format(db_name)
+            del_all_tables = f"drop database {db_name} cascade"
             self.run_query(del_all_tables)
 
-            create_db = " create database {0} ".format(db_name)
+            create_db = f" create database {db_name} "
             self.run_query(create_db)
 
             get_all_table = ("select views, source_table_name, "
@@ -181,9 +181,9 @@ class PerfInventory(Inventory):
                         self.run_ingest_hql(file_name)
 
         else:
-            del_all_tables = "drop database {0} cascade".format(db_name)
+            del_all_tables = f"drop database {db_name} cascade"
             self.run_query(del_all_tables)
-            create_db = " create database {0} ".format(db_name)
+            create_db = f" create database {db_name} "
             self.run_query(create_db)
 
     def reingest_hql(self, view, src_table, src_db, full_table):
@@ -227,8 +227,8 @@ class PerfInventory(Inventory):
     def run_ingest_hql(self, team_hql):
         """ Run all the HQLs generated for reingest """
 
-        jdbc_url_param = "-u '{0}'".format(self.cfg_mgr.beeline_url)
-        file_name = " -f '{0}'".format(team_hql)
+        jdbc_url_param = f"-u '{self.cfg_mgr.beeline_url}'"
+        file_name = f" -f '{team_hql}'"
         eval_params = ["beeline", "/etc/hive/beeline.properties",
                        jdbc_url_param,
                        file_name]

@@ -175,7 +175,7 @@ class ITInventory(Inventory):
     def get_all_tables(self):
         """Return a list of all records from it_table."""
         tables = []
-        query = 'SELECT * FROM {tbl}'.format(tbl=self.table)
+        query = f'SELECT * FROM {self.table}'
         result = self.get_rows(query)
         if result:
             for table_row in result:
@@ -184,7 +184,7 @@ class ITInventory(Inventory):
 
     def save_all_tables(self, file_name, source_type):
         """Saves records in IT Table to a text file"""
-        _path = self.cfg_mgr.files + '{name}.txt'.format(name=file_name)
+        _path = self.cfg_mgr.files + f'{file_name}.txt'
         file_h = open(os.path.join(_path), "wb+")
 
         tables = self.get_all_tables()
@@ -196,35 +196,35 @@ class ITInventory(Inventory):
                     continue
             cnt += 1
             file_h.write('\n[Request]\n')
-            file_h.write('domain:{0}\n'.format(table.domain))
-            file_h.write('jdbcurl:{0}\n'.format(table.jdbcurl))
-            file_h.write('db_username:{0}\n'.format(table.username))
-            file_h.write('password_file:{0}\n'.format(table.password_file))
-            file_h.write('split_by:{0}\n'.format(table.split_by))
-            file_h.write('mappers:{0}\n'.format(table.mappers))
-            file_h.write('refresh_frequency:{0}\n'.format(
+            file_h.write(f'domain:{table.domain}\n')
+            file_h.write(f'jdbcurl:{table.jdbcurl}\n')
+            file_h.write(f'db_username:{table.username}\n')
+            file_h.write(f'password_file:{table.password_file}\n')
+            file_h.write(f'split_by:{table.split_by}\n')
+            file_h.write(f'mappers:{table.mappers}\n')
+            file_h.write('refresh_frequency:{}\n'.format(
                 table.frequency_readable))
-            file_h.write('weight:{0}\n'.format(
+            file_h.write('weight:{}\n'.format(
                 table.load_readable))
-            file_h.write('fetch_size:{0}\n'.format(table.fetch_size))
-            file_h.write('hold:{0}\n'.format(table.hold))
+            file_h.write(f'fetch_size:{table.fetch_size}\n')
+            file_h.write(f'hold:{table.hold}\n')
             file_h.write(
-                'automation_appl_id:{0}\n'.format(
+                'automation_appl_id:{}\n'.format(
                     table.automation_appl_id))
-            file_h.write('views:{0}\n'.format(table.views))
+            file_h.write(f'views:{table.views}\n')
             file_h.write(
-                'automation_group:{0}\n'.format(
+                'automation_group:{}\n'.format(
                     table.automation_group))
-            file_h.write('check_column:{0}\n'.format(table.check_column))
-            file_h.write('source_schema_name:{0}\n'.format(
+            file_h.write(f'check_column:{table.check_column}\n')
+            file_h.write('source_schema_name:{}\n'.format(
                 table.schema))
-            file_h.write('sql_query:{0}\n'.format(table.query))
-            file_h.write('actions:{0}\n'.format(table.actions))
-            file_h.write('source_database_name:{0}\n'.format(
+            file_h.write(f'sql_query:{table.query}\n')
+            file_h.write(f'actions:{table.actions}\n')
+            file_h.write('source_database_name:{}\n'.format(
                 table.database))
-            file_h.write('source_table_name:{0}\n'.format(
+            file_h.write('source_table_name:{}\n'.format(
                 table.table_name))
-            file_h.write('db_env:{0}\n'.format(
+            file_h.write('db_env:{}\n'.format(
                 table.db_env))
         file_h.close()
         msg = 'Saved {count} tables in {it_table} to {path}{file_name}.txt'
@@ -240,7 +240,7 @@ class ITInventory(Inventory):
     def get_domains(self):
         """Get all distinct domains in the IT table."""
         domains = []
-        query = 'SELECT DISTINCT domain FROM {tbl}'.format(tbl=self.table)
+        query = f'SELECT DISTINCT domain FROM {self.table}'
         result = self.get_rows(query)
         if result:
             for dom in result:

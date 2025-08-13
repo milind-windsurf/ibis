@@ -96,7 +96,7 @@ def parse_file_by_sections(section_file, header, required_keys,
                                 err_msg = Utilities.print_box_msg(err_msg, 'x')
                                 raise ValueError(err_msg)
                         else:
-                            err_msg = 'Header {0} not found'.format(header)
+                            err_msg = f'Header {header} not found'
                             err_msg = Utilities.print_box_msg(err_msg, 'x')
                             raise ValueError(err_msg)
 
@@ -117,7 +117,7 @@ def parse_file_by_sections(section_file, header, required_keys,
                 else:
                     continue
         section_file.close()
-    except IOError:
+    except OSError:
         msg = 'Error can\'t find file or read data from {file}'
         msg = msg.format(file=section_file.name)
         raise ValueError(msg)

@@ -60,11 +60,11 @@ class RunningTooLongError(Exception):
 
     def __init___(self, dErrorArguments):
         """init"""
-        Exception.__init__(self, "{0}".format(dErrorArguments))
+        Exception.__init__(self, f"{dErrorArguments}")
         self.dErrorArguments = dErrorArguments
 
 
-class SourceTable(object):
+class SourceTable:
     """Common operations for sql tables."""
 
     def __init__(self, cfg_mgr, it_table):
@@ -128,7 +128,7 @@ class SourceTable(object):
         Returns:
             Matched string between |abc|
         """
-        pattern = re.compile('\|.*\|')
+        pattern = re.compile(r'\|.*\|')
         return pattern.findall(output)
 
     def fetch_rows_sqoop(self, output, strip_col_val=True,
@@ -252,7 +252,7 @@ class SourceTable(object):
     def get_auto_values(self, timeout=45):
         """Determine auto it table"""
         time_start = time.time()
-        self.logger.info("Timeout set to: {0}".format(timeout))
+        self.logger.info(f"Timeout set to: {timeout}")
         # Set the signal handler for alarm
         signal.signal(signal.SIGALRM, self.timeout_handler)
         signal.alarm(timeout)
@@ -273,7 +273,7 @@ class SourceTable(object):
             mappers = self.it_table_obj.mappers
             split_by_column = self.it_table_obj.split_by
         time_end = time.time()
-        self.logger.info("Time taken for split_by: {0} seconds".format(
+        self.logger.info("Time taken for split_by: {} seconds".format(
             time_end - time_start))
         return load, mappers, split_by_column
 
@@ -331,7 +331,7 @@ class SourceTable(object):
             primary_key = self.find_primary_key()
 
             if primary_key:
-                msg = 'Table: {0} - Primary key is the split by column'.format(
+                msg = 'Table: {} - Primary key is the split by column'.format(
                     self.table)
                 self.logger.info(msg)
                 split_by_column = primary_key
@@ -407,7 +407,7 @@ class SourceTable(object):
             with open(write_path, 'w') as file_obj:
                 file_obj.write(it_table_string)
                 self.logger.info(
-                    "Generated IT table file {0}".format(write_path))
+                    f"Generated IT table file {write_path}")
             os.chmod(write_path, file_permission)
 
 
@@ -623,14 +623,14 @@ class DB2Table(SourceTable):
             unique_key = self.find_primary_key()
             if unique_key:
                 self.logger.info("Split by column found in DB2 "
-                                 "table primary key {0}"
+                                 "table primary key {}"
                                  .format(unique_key))
             else:
                 # Rule 3 - find unique key from integers
                 unique_key = self.find_unique_key()
                 if unique_key:
                     self.logger.info("Split by column found in DB2 "
-                                     "table unique key index {0}"
+                                     "table unique key index {}"
                                      .format(unique_key))
                 else:
                     unique_key = "no-split"
@@ -748,7 +748,7 @@ class TeradataTable(SourceTable):
                 return results[0][0]
             else:
                 self.logger.warning('No split_by found:\
-                 {0}'.format(hdfs_query))
+                 {}'.format(hdfs_query))
                 return "no-split"
         else:
             query = query.format(table_name=table, db_name=db)
@@ -756,7 +756,7 @@ class TeradataTable(SourceTable):
             if returncode == 0:
                 _, result = self.fetch_rows_sqoop(output)
                 if result is None or len(result) == 0:
-                    self.logger.warning('No split_by found: {0}'.format(query))
+                    self.logger.warning(f'No split_by found: {query}')
                     return "no-split"
                 else:
                     if result[0][3] == '7':
@@ -783,7 +783,7 @@ class TeradataTable(SourceTable):
                                 result = result[0][0]
                                 return result
                             else:
-                                _msg = 'No split_by found: {0}'.format(query)
+                                _msg = f'No split_by found: {query}'
                                 self.logger.warning(_msg)
                                 return "no-split"
                         else:
@@ -1150,11 +1150,11 @@ def create(tables_fh, cfg_mgr, timeout):
     src_obj.write_it_table_files(manual_file_path, manual)
 
     if auto:
-        auto_fh = open(auto_file_path, 'r')
+        auto_fh = open(auto_file_path)
     return auto_fh
 
 
-class Get_Auto_Split(object):
+class Get_Auto_Split:
     """
     Get Auto split by for a table
     """
@@ -1170,5 +1170,5 @@ class Get_Auto_Split(object):
 
 
 if __name__ == '__main__':
-    tables_fh = open('tables.txt', 'r')
+    tables_fh = open('tables.txt')
     create(tables_fh, "", 300)
