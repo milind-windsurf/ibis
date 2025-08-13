@@ -12,9 +12,9 @@
 
 Version 1.9.4
 
-Python 2.7.8
+Python 3.x
 
-## usage: COM_TEAM_ibis-1.9.4-py2.7.egg[-h] [--db DB] [--table TABLE]
+## usage: COM_TEAM_ibis-1.9.4-py3.x.egg[-h] [--db DB] [--table TABLE]
                                     [--frequency FREQUENCY]
 
                                     [--teamname TEAMNAME]
