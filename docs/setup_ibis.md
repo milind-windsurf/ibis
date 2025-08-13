@@ -46,7 +46,7 @@ Follow the below 3 steps:-
     
     ```sudo yum groupinstall -y "development tools"```
     
-    ```sudo yum install krb5-devel gcc zlib-devel gcc-c++ python-devel cyrus-sasl-devel openssl openssl-devel libffi-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel snappy-devel expat-devel patch -y --skip-broken &&```
+    ```sudo yum install krb5-devel gcc zlib-devel gcc-c++ python3-devel cyrus-sasl-devel openssl openssl-devel libffi-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel snappy-devel expat-devel patch -y --skip-broken &&```
 
 
       To prepare the IBIS Env (create the required directories, DB and tables used by IBIS), run the following Env [setup shell](/setup.sh):
@@ -79,7 +79,7 @@ Follow the below 3 steps:-
 
 - Unix like environment (Mac, Linux)
 
-- Python 2.7.4+
+- Python 3.6+
 
 - requirements.pip (Is executed in IBIS one time setup)
 

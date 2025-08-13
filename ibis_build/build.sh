@@ -85,7 +85,7 @@ build_egg(){
 	#Build the egg
 	
 	cd $ibis_home
-	python2.7 $ibis_home/setup.py bdist_egg
+	python3 $ibis_home/setup.py bdist_egg
     let EXIT_STATUS_PY=$?
 	if [ "$EXIT_STATUS_PY" -gt 0 ]
 	then
