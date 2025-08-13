@@ -33,7 +33,7 @@ class FileParserTest(unittest.TestCase):
                      'password_file': '/test/passwd', 'db_username': 'fake_username',
                      'source_table_name': 'claim_test'}]
 
-        self.assertEqual(cmp(sorted(expected), sorted(sections)), 0)
+        self.assertEqual(expected, sections)
 
     def test_parse_file_by_sections_spaces(self):
         """test for spaces around user input"""
@@ -48,7 +48,7 @@ class FileParserTest(unittest.TestCase):
                      'password_file': '/test/passwd', 'db_username': 'fake_username',
                      'source_table_name': 'claim_dim'}]
 
-        self.assertEqual(cmp(sorted(expected), sorted(sections)), 0)
+        self.assertEqual(expected, sections)
 
     def test_parse_file_by_sections_fail(self):
         """Given a file containing sections with a header.
