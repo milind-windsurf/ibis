@@ -8,7 +8,7 @@ import pydot
 # http://wingraphviz.sourceforge.net/wingraphviz/language/colorname.htm
 
 
-class VizOozie(object):
+class VizOozie:
     """VizOozie is an Oozie workflow visualization tool
     Found at https://github.com/iprovalo/vizoozie modified for ibis use"""
     properties = {}
@@ -161,9 +161,9 @@ class VizOozie(object):
         Args:
             wf_name: file name
         """
-        wf_path = os.path.join(self.cfg_mgr.files, '{0}.xml'.format(
+        wf_path = os.path.join(self.cfg_mgr.files, '{}.xml'.format(
             wf_name))
-        xml_file = open(wf_path, 'r')
+        xml_file = open(wf_path)
         input_str = xml_file.read()
         output = self.convertWorkflowXMLToDOT(input_str,
                                               os.path.basename(xml_file.name))

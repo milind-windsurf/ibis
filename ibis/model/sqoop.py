@@ -21,7 +21,7 @@ class Sqoop(Action):
                                      self.params['cfg_mgr'])
                 self.command = self.params['command']
                 # self.logger.info("Sqoop action successful")
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Sqoop KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting sqoop action type')

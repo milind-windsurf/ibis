@@ -13,7 +13,7 @@ from ibis.utilities.utilities import Utilities
 from ibis.inventor.dsl_parser import DSLParser
 
 
-class ActionBuilder(object):
+class ActionBuilder:
 
     """Utilizes building blocks to generated workflow"""
 
@@ -56,7 +56,7 @@ class ActionBuilder(object):
     def get_hdfs_files_path(self):
         """Returns the path of hdfs path of .py and .sh files
         used for running workflow"""
-        return "/user/dev/oozie/workspaces/ibis/lib/ingest{0}/".format(
+        return "/user/dev/oozie/workspaces/ibis/lib/ingest{}/".format(
             self.cfg_mgr.hdfs_ingest_version)
 
     def gen_property_xml(self, prop_name, prop_value):
@@ -72,7 +72,7 @@ class ActionBuilder(object):
         #  an avro and import_prep
         fork = ''
         if fork_type == 'concurrent':
-            fork = '\n\t<fork name=\"{name}\">\n'.format(name=name)
+            fork = f'\n\t<fork name=\"{name}\">\n'
             for path in paths:
                 if not is_sub:
                     _tmp = '\t\t<path start=\"{path}_{action_name}\"/>\n'
@@ -81,7 +81,7 @@ class ActionBuilder(object):
                         action_name=self.action_names['import_prep'])
                     fork += _tmp
                 else:
-                    fork += '\t\t<path start=\"{path}\"/>\n'.format(path=path)
+                    fork += f'\t\t<path start=\"{path}\"/>\n'
             fork += '\t</fork>\n'
         elif fork_type == 'staggered':
             if len(paths) > 2:
@@ -92,9 +92,9 @@ class ActionBuilder(object):
             if not is_sub:
                 paths[0] += '_' + self.action_names['avro']
                 paths[1] += '_' + self.action_names['import_prep']
-            fork = '\t<fork name=\"{name}\">\n'.format(name=name)
-            fork += '\t\t<path start=\"{path}\"/>\n'.format(path=paths[0])
-            fork += '\t\t<path start=\"{path}\"/>\n'.format(path=paths[1])
+            fork = f'\t<fork name=\"{name}\">\n'
+            fork += f'\t\t<path start=\"{paths[0]}\"/>\n'
+            fork += f'\t\t<path start=\"{paths[1]}\"/>\n'
             fork += '\t</fork>\n'
         else:
             err_msg = 'Unknown fork type {fork_type} given'
@@ -116,14 +116,14 @@ class ActionBuilder(object):
             'name': action_name, 'ok': 'unknown',
             'error': self.error_to_action, 'execute': 'import_prep.sh',
             'env_var': [
-                'source_database_name={0}'.format(self.it_table.database),
-                'source_table_name={0}'.format(self.it_table.table_name),
-                'db_env={0}'.format(self.it_table.db_env),
-                'target_dir={0}'.format(self.it_table.target_dir),
-                'it_table={0}'.format(self.cfg_mgr.it_table),
-                'it_table_host={0}'.format(self.cfg_mgr.workflow_host),
+                f'source_database_name={self.it_table.database}',
+                f'source_table_name={self.it_table.table_name}',
+                f'db_env={self.it_table.db_env}',
+                f'target_dir={self.it_table.target_dir}',
+                f'it_table={self.cfg_mgr.it_table}',
+                f'it_table_host={self.cfg_mgr.workflow_host}',
                 'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                'hdfs_ingest_path={0}'.format(self.get_hdfs_files_path())],
+                f'hdfs_ingest_path={self.get_hdfs_files_path()}'],
             'file': [
                 self.get_hdfs_files_path() + 'import_prep.sh#import_prep.sh']}
         return Shell(**params)
@@ -215,7 +215,7 @@ class ActionBuilder(object):
                 if not (it_table.is_sqlserver or it_table.is_mysql or
                         it_table.is_postgresql or it_table.is_teradata):
                     column_name = column_name.upper()
-                col_arg.append('{column}=String'.format(column=column_name))
+                col_arg.append(f'{column_name}=String')
             map_column_java = ','.join(col_arg)
             args.append(map_column_java)
 
@@ -366,7 +366,7 @@ class ActionBuilder(object):
         args = []
         config = [{'fs.hdfs.impl.disable.cache': 'true'}]
         jceks, password = self.it_table.split_password_file
-        target_dir = '/user/data/ingest/{0}'.format(self.it_table.target_dir)
+        target_dir = f'/user/data/ingest/{self.it_table.target_dir}'
 
         args += ['--verbose', '--connect', self.it_table.jdbcurl,
                  '--target-dir', target_dir, '--delete-target-dir',
@@ -501,10 +501,10 @@ class ActionBuilder(object):
             'cfg_mgr': self.cfg_mgr, 'action_type': 'shell',
             'name': action_name, 'ok': 'unknown',
             'error': self.error_to_action, 'execute': 'avro_parquet.sh',
-            'env_var': ['target_dir={0}'.format(self.it_table.target_dir),
+            'env_var': [f'target_dir={self.it_table.target_dir}',
                         'hive2_jdbc_url=${hive2_jdbc_url}',
                         'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                        'hdfs_ingest_path={0}'.format(
+                        'hdfs_ingest_path={}'.format(
                             self.get_hdfs_files_path())],
             'file': [self.get_hdfs_files_path() +
                      'avro_parquet.sh#avro_parquet.sh']}
@@ -517,12 +517,12 @@ class ActionBuilder(object):
             'cfg_mgr': self.cfg_mgr, 'action_type': 'shell',
             'name': action_name,
             'ok': ok, 'error': error, 'execute': 'parquet_export.sh',
-            'env_var': ['table_name={0}'.format(source_table_name),
-                        'target_dir={0}'.format(source_dir),
-                        'database={0}'.format(source_database_name),
+            'env_var': [f'table_name={source_table_name}',
+                        f'target_dir={source_dir}',
+                        f'database={source_database_name}',
                         'hive2_jdbc_url=${hive2_jdbc_url}',
                         'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                        'hdfs_ingest_path={0}'.format(
+                        'hdfs_ingest_path={}'.format(
                             self.get_hdfs_files_path())],
             'file': [
                 self.get_hdfs_files_path() + 'parquet_export.sh#'
@@ -644,12 +644,12 @@ class ActionBuilder(object):
             'cfg_mgr': self.cfg_mgr, 'action_type': 'shell',
             'name': action_name,
             'ok': ok, 'error': error, 'execute': 'export_prep.sh',
-            'env_var': ['table_name={0}'.format(source_table_name),
-                        'source_dir={0}'.format(source_dir),
-                        'database={0}'.format(source_database_name),
+            'env_var': [f'table_name={source_table_name}',
+                        f'source_dir={source_dir}',
+                        f'database={source_database_name}',
                         'hive2_jdbc_url=${hive2_jdbc_url}',
                         'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                        'hdfs_export_path={0}'.format(
+                        'hdfs_export_path={}'.format(
                             self.get_hdfs_files_path())],
             'file': [
                 self.get_hdfs_files_path() + 'export_prep.sh#'
@@ -694,18 +694,18 @@ class ActionBuilder(object):
             'cfg_mgr': self.cfg_mgr, 'action_type': 'shell',
             'name': action_name,
             'ok': ok, 'error': error, 'execute': 'check_export.sh',
-            'env_var': ['target_schema={0}'.format(database),
-                        'connection_factories={0}'.format(driver),
-                        'jdbc_url={0}'.format(jdbc_url),
-                        'database={0}'.format(target_database_name),
-                        'target_table={0}'.format(target_table_name),
-                        'user_name={0}'.format(user_name),
-                        'password_alias={0}'.format(db_password),
-                        'jceks={0}'.format(jceks),
-                        'source_database_name={0}'.format(source_database),
-                        'source_table_name={0}'.format(tbl),
+            'env_var': [f'target_schema={database}',
+                        f'connection_factories={driver}',
+                        f'jdbc_url={jdbc_url}',
+                        f'database={target_database_name}',
+                        f'target_table={target_table_name}',
+                        f'user_name={user_name}',
+                        f'password_alias={db_password}',
+                        f'jceks={jceks}',
+                        f'source_database_name={source_database}',
+                        f'source_table_name={tbl}',
                         'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                        'hdfs_export_path={0}'.format(
+                        'hdfs_export_path={}'.format(
                             self.get_hdfs_files_path())],
             'file': [
                 self.get_hdfs_files_path() + 'check_export.sh#'
@@ -756,19 +756,19 @@ class ActionBuilder(object):
             'name': action_name, 'ok': ok, 'error': error,
             'execute': 'quality_assurance_export.sh',
             'env_var': [
-                'jdbc_url={0}'.format(jdbc_url),
-                'connection_factories={0}'.format(
+                f'jdbc_url={jdbc_url}',
+                'connection_factories={}'.format(
                     connection_factories),
-                'user_name={0}'.format(user_name),
-                'password_alias={0}'.format(password),
-                'jceks={0}'.format(jceks),
-                'source_table_name={0}'.format(source_table_name),
-                'source_database_name={0}'.format(source_database),
-                'target_schema={0}'.format(source_db_name),
-                'target_table_name={0}'.format(domain),
-                'target_database={0}'.format(jdbc_database),
-                'workflowName={0}'.format(workflow),
-                'hdfs_export_path={0}'.format(self.get_hdfs_files_path())],
+                f'user_name={user_name}',
+                f'password_alias={password}',
+                f'jceks={jceks}',
+                f'source_table_name={source_table_name}',
+                f'source_database_name={source_database}',
+                f'target_schema={source_db_name}',
+                f'target_table_name={domain}',
+                f'target_database={jdbc_database}',
+                f'workflowName={workflow}',
+                f'hdfs_export_path={self.get_hdfs_files_path()}'],
             'file': [self.get_hdfs_files_path() +
                      'quality_assurance_export.sh#'
                      'quality_assurance_export.sh']}
@@ -869,17 +869,17 @@ class ActionBuilder(object):
             'cfg_mgr': self.cfg_mgr, 'action_type': 'shell',
             'name': action_name, 'ok': 'unknown',
             'error': self.error_to_action, 'execute': 'quality_assurance.sh',
-            'env_var': ['ingestion_type={0}'.format(ingestion_type),
-                        'target_dir={0}'.format(self.it_table.target_dir),
+            'env_var': [f'ingestion_type={ingestion_type}',
+                        f'target_dir={self.it_table.target_dir}',
                         'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                        'hdfs_ingest_path={0}'.format(
+                        'hdfs_ingest_path={}'.format(
                             self.get_hdfs_files_path())],
             'file': [self.get_hdfs_files_path() + 'quality_assurance.sh#'
                                                   'quality_assurance.sh']}
 
         if ingestion_type == 'incremental':
             params['env_var'].append(
-                'workflowName={0}'.format(self.workflowName))
+                f'workflowName={self.workflowName}')
         return Shell(**params)
 
     def gen_parquet_swap_action(self, action_name):
@@ -889,10 +889,10 @@ class ActionBuilder(object):
             'name': action_name, 'ok': 'unknown',
             'error': self.error_to_action, 'execute': 'parquet_swap.sh',
             'env_var': [
-                'target_dir={0}'.format(self.it_table.target_dir),
+                f'target_dir={self.it_table.target_dir}',
                 'hive2_jdbc_url=${hive2_jdbc_url}',
                 'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                'hdfs_ingest_path={0}'.format(self.get_hdfs_files_path())],
+                f'hdfs_ingest_path={self.get_hdfs_files_path()}'],
             'file': [self.get_hdfs_files_path() +
                      'parquet_swap.sh#parquet_swap.sh']}
         return Shell(**params)
@@ -923,9 +923,9 @@ class ActionBuilder(object):
             'cfg_mgr': self.cfg_mgr, 'action_type': 'shell',
             'name': action_name, 'ok': 'unknown',
             'error': self.error_to_action, 'execute': 'impala_cleanup.sh',
-            'env_var': ['target_dir={0}'.format(self.it_table.target_dir),
+            'env_var': [f'target_dir={self.it_table.target_dir}',
                         'HADOOP_CONF_DIR=/etc/hadoop/conf',
-                        'hdfs_ingest_path={0}'.format(
+                        'hdfs_ingest_path={}'.format(
                             self.get_hdfs_files_path())],
             'file': [
                 self.get_hdfs_files_path() + 'impala_cleanup.sh#'
@@ -1192,11 +1192,11 @@ class ActionBuilder(object):
             'name': source_table_name + "_kite_ingest",
             'ok': ok, 'error': error, 'execute': 'kite.sh',
             'env_var': [
-                'hdfs_ingest_path={0}'.format(
+                'hdfs_ingest_path={}'.format(
                     self.get_hdfs_files_path())],
-            'arg': ['{0}'.format(source_database_name),
-                    '{0}'.format(source_table_name),
-                    '{0}'.format(hdfs_loc)],
+            'arg': [f'{source_database_name}',
+                    f'{source_table_name}',
+                    f'{hdfs_loc}'],
             'file': [
                 self.get_hdfs_files_path() + 'kite.sh#'
                                              'kite.sh']}
@@ -1296,9 +1296,9 @@ class ActionBuilder(object):
             'name': action_name, 'ok': ok, 'error': error,
             'execute': 'oozie-impala.sh',
             'env_var': ['impala_daemon=${impala_daemon}',
-                        'impala_file={script}'.format(script=script)],
+                        f'impala_file={script}'],
             'file': ['${nameNode}' + impala_dir +
-                     '/{script}'.format(script=script),
+                     f'/{script}',
                      '/user/dev/lib/ingest/oozie-impala.sh#oozie-impala.sh',
                      '/user/dev/oozie.tab#oozie.tab']}
         return Impala(**params)

@@ -117,8 +117,8 @@ class UtilitiesFunctionsTest(unittest.TestCase):
         test_str = test_fh.read()
         expected_str = fo_gen.read()
         if not self.strings_equal(test_str, expected_str):
-            print "Generated test file:{0}".format(test_file)
-            print "Fix the file:{0}".format(expected_file)
+            print("Generated test file:{0}".format(test_file))
+            print("Fix the file:{0}".format(expected_file))
             same = False
 
         test_fh.close()
@@ -134,11 +134,11 @@ class UtilitiesFunctionsTest(unittest.TestCase):
                         expected_str.splitlines()]
         if "".join(expected_str) != "".join(test_str):
             same = False
-            print '\n'
-            print '=' * 100
-            print "\nFiles don't match..."
+            print('\n')
+            print('=' * 100)
+            print("\nFiles don't match...")
             diff = difflib.unified_diff(expected_str, test_str)
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
         return same
 
     def test_gen_kornshell(self):
@@ -162,25 +162,25 @@ class UtilitiesFunctionsTest(unittest.TestCase):
                                   self.sql_tbl_quarterly],
                     'db2': [self.db2_tbl_fortnightly],
                     'mysql': [self.mysql_tbl_fortnightly]}
-        self.assertEquals(cmp(expected,
+        self.assertEquals(expected,
                               self.utilities.sort_tables_by_source(
                                   [self.db2_tbl_fortnightly,
                                    self.oracle_tbl_monthly,
                                    self.td_tbl_weekly, self.sql_tbl_quarterly,
                                    self.sql_tbl_quarterly,
-                                   self.mysql_tbl_fortnightly])), 0)
+                                   self.mysql_tbl_fortnightly]))
 
     def test_sort_tables_by_domain(self):
         expected = {'fake_view_im': [self.td_tbl_weekly],
                     'fake_domain': [self.oracle_tbl_monthly],
                     'logs': [self.sql_tbl_quarterly],
                     'rx': [self.db2_tbl_fortnightly, self.db2_tbl_fortnightly]}
-        self.assertEquals(cmp(expected,
+        self.assertEquals(expected,
                               self.utilities.sort_tables_by_domain(
                                   [self.db2_tbl_fortnightly,
                                    self.oracle_tbl_monthly,
                                    self.td_tbl_weekly, self.sql_tbl_quarterly,
-                                   self.db2_tbl_fortnightly])), 0)
+                                   self.db2_tbl_fortnightly]))
 
     def test_sort_tables_by_database(self):
         expected = {
@@ -188,11 +188,11 @@ class UtilitiesFunctionsTest(unittest.TestCase):
             'fake_database_2': [self.sql_tbl_quarterly],
             'fake_database_3': [self.td_tbl_weekly, self.td_tbl_weekly],
             'fake_database_4': [self.db2_tbl_fortnightly]}
-        self.assertEquals(cmp(expected,
+        self.assertEquals(expected,
                               self.utilities.sort_tables_by_database(
                                   [self.td_tbl_weekly, self.oracle_tbl_monthly,
                                    self.td_tbl_weekly, self.sql_tbl_quarterly,
-                                   self.db2_tbl_fortnightly])), 0)
+                                   self.db2_tbl_fortnightly]))
 
     def test_sort_tables_by_schedule(self):
         expected = {'100': [self.td_tbl_weekly],
@@ -204,12 +204,12 @@ class UtilitiesFunctionsTest(unittest.TestCase):
             if schedule not in expected.keys():
                 expected[schedule] = []
 
-        self.assertEquals(cmp(expected,
+        self.assertEquals(expected,
                               self.utilities.sort_tables_by_schedule(
                                   [self.td_tbl_weekly, self.oracle_tbl_monthly,
                                    self.sql_tbl_quarterly,
                                    self.db2_tbl_fortnightly,
-                                   self.sql_tbl_quarterly])), 0)
+                                   self.sql_tbl_quarterly]))
 
     def test_clean_lines(self):
         """test clean lines"""

@@ -29,31 +29,31 @@ def sqoop_standalone_setup():
     pwd = 'pwd'
     new_line_current_dir = subprocess.check_output(pwd)
     current_dir = new_line_current_dir.strip()
-    if not os.path.isdir("{0}/sqoop_jars".format(current_dir)):
-        make_sqoop_dir = ["mkdir", "{0}/sqoop_jars".format(current_dir)]
+    if not os.path.isdir(f"{current_dir}/sqoop_jars"):
+        make_sqoop_dir = ["mkdir", f"{current_dir}/sqoop_jars"]
         sqoop_dir = subprocess.Popen(make_sqoop_dir, stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
         output, err = sqoop_dir.communicate()
-        print output, err
+        print(output, err)
 
     for jar in jars:
-        HADOOP_CLASSPATH.append('{0}/sqoop_jars/{1}'.format(current_dir, jar))
-        SQOOPJARS.append('{0}/sqoop_jars/{1}'.format(current_dir, jar))
-        if os.path.isfile('{0}/sqoop_jars/{1}'.format(current_dir, jar)):
+        HADOOP_CLASSPATH.append(f'{current_dir}/sqoop_jars/{jar}')
+        SQOOPJARS.append(f'{current_dir}/sqoop_jars/{jar}')
+        if os.path.isfile(f'{current_dir}/sqoop_jars/{jar}'):
             continue
         hdfs_get = ["hadoop", "fs", "-get",
-                    "/user/dev/oozie/share/lib/sqoop/{0}".format(jar),
-                    "{0}/sqoop_jars".format(current_dir)]
+                    f"/user/dev/oozie/share/lib/sqoop/{jar}",
+                    f"{current_dir}/sqoop_jars"]
         proc = subprocess.Popen(hdfs_get, stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         output, err = proc.communicate()
 
         if proc.returncode != 0:
-            print 'hdfs get failed for \
-                   /user/dev/oozie/share/lib/sqoop/{0}'.format(jar)
-            print output, err
+            print('hdfs get failed for \
+                   /user/dev/oozie/share/lib/sqoop/{}'.format(jar))
+            print(output, err)
 
     HADOOP_CLASSPATH = ','.join(HADOOP_CLASSPATH)
     SQOOPJARS = ','.join(SQOOPJARS)
@@ -62,7 +62,7 @@ def sqoop_standalone_setup():
     os.environ['SQOOPJARS'] = SQOOPJARS
 
 
-class AuthTest(object):
+class AuthTest:
     """Tests Sqoop Auth"""
 
     def __init__(self, cfg_mgr, database, table, jdbcurl):
@@ -77,7 +77,7 @@ class AuthTest(object):
         """Test auth"""
         status = True
         queries = []
-        queries.append('SELECT COUNT(*) FROM {0}.{1} WHERE 1=0'.format(
+        queries.append('SELECT COUNT(*) FROM {}.{} WHERE 1=0'.format(
             self.database.upper(), self.table.upper()))
 
         if ORACLE in self.jdbcurl:
@@ -97,7 +97,7 @@ class AuthTest(object):
         for query in queries:
             ret, _, err = sqoop_h._eval(self.jdbcurl, query, user_name,
                                         password_file)
-            self.logger.info('Running query: {0}'.format(query))
+            self.logger.info(f'Running query: {query}')
             if ret == 0:
                 msg = 'Success: {0} has SELECT access'
                 msg = msg.format(user_name)

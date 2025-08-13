@@ -36,7 +36,7 @@ class ImpalaConnect(object):
             if op == 'select':
                 result = cur.fetchall()
         else:
-            raise "Hive connection - cursor is none"
+            raise Exception("Hive connection - cursor is none")
         return result
 
     @classmethod
@@ -66,7 +66,7 @@ class ImpalaConnect(object):
                     configuration={'request_pool': 'ingestion'})
 
         if not cur:
-            raise "Hive connection - cursor is none"
+            raise Exception("Hive connection - cursor is none")
 
 
 class HiveConnect(object):
@@ -95,7 +95,7 @@ class HiveConnect(object):
             if op == 'select':
                 result = cur.fetchall()
         else:
-            raise "Hive connection - cursor is none"
+            raise Exception("Hive connection - cursor is none")
         return result
 
     @classmethod

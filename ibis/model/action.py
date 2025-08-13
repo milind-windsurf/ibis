@@ -1,12 +1,15 @@
 """Action definitions."""
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from pkg_resources import resource_filename
 from ibis.utilities.utilities import *
 from ibis.custom_logging import get_logger
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class Action(object):
+class Action:
 
     def __init__(self, action_type, name, ok, error, cfg_mgr):
         self.action_type = action_type
@@ -38,8 +41,12 @@ class Action(object):
 
     def generate_action(self):
         """Return XML workflow action."""
-        template_file = resource_filename('resources.templates',
-                                          '{action}.xml.mako'.
-                                          format(action=self.action_type))
+        try:
+            template_file = str(files('resources.templates').joinpath(
+                f'{self.action_type}.xml.mako'))
+        except (ImportError, AttributeError):
+            template_file = resource_filename('resources.templates',
+                                              '{action}.xml.mako'.
+                                              format(action=self.action_type))
         template = Template(filename=template_file, format_exceptions=True)
         return template.render(node=self)

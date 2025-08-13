@@ -19,7 +19,7 @@ except ImportError:
 requests.packages.urllib3.disable_warnings()
 
 
-class Utilities(object):
+class Utilities:
 
     """Provides additional functionality to ibis"""
 
@@ -32,10 +32,10 @@ class Utilities(object):
         """Returns lines from a file"""
         lines = ''
         try:
-            with open(file_name, "r") as file_h:
+            with open(file_name) as file_h:
                 lines = file_h.readlines()
-        except IOError as ie:
-            err_msg = 'Cannot open {file} .'.format(file=file_name)
+        except OSError as ie:
+            err_msg = f'Cannot open {file_name} .'
             self.logger.error(err_msg)
         return lines
 
@@ -55,7 +55,7 @@ class Utilities(object):
             appl_id = None
         name_val = workflow_name.split('.')[0]
         file_name = os.path.join(self.cfg_mgr.files,
-                                 '{0}_job.properties'.format(name_val))
+                                 f'{name_val}_job.properties')
 
         for prop_val in job_prop:
             job_properties.append(prop_val)
@@ -68,22 +68,22 @@ class Utilities(object):
 
         if table:
             _lines = []
-            _lines.append('source_table_name={0}\n'.format(table.table_name))
-            _lines.append('source_database_name={0}\n'.format(table.database))
+            _lines.append(f'source_table_name={table.table_name}\n')
+            _lines.append(f'source_database_name={table.database}\n')
             if table.query:
-                _lines.append('sql_query={0}\n'.format(table.query))
+                _lines.append(f'sql_query={table.query}\n')
             job_properties += _lines
 
         with open(file_name, "wb+") as file_h:
             line = ''.join(job_properties)
             file_h.write(line)
-            file_h.write('workflowName={job}\n'.format(job=workflow_name))
+            file_h.write(f'workflowName={workflow_name}\n')
             if table_list:
                 _line = '#List of tables ingested: {0}\n'
                 _line = _line.format(', '.join(table_list))
                 file_h.write(_line)
 
-        self.logger.info('Generated job properties file: {0}'.format(
+        self.logger.info('Generated job properties file: {}'.format(
             file_name))
         self.gen_job_config_xml(name_val, job_properties)
         return status
@@ -100,10 +100,10 @@ class Utilities(object):
                             format_exceptions=True)
         xml = template.render(wf_props=wf_props)
         file_name = os.path.join(self.cfg_mgr.files,
-                                 '{0}_props_job.xml'.format(workflow_name))
+                                 f'{workflow_name}_props_job.xml')
         with open(file_name, "wb+") as file_h:
             file_h.write(xml)
-            self.logger.info('Generated job config xml: {0}'.format(file_name))
+            self.logger.info(f'Generated job config xml: {file_name}')
 
     def run_workflow(self, workflow_name):
         """Runs oozie properties file on host
@@ -114,12 +114,12 @@ class Utilities(object):
         config_file = os.path.join(self.cfg_mgr.saves, '{name}_job.properties')
         config_file = config_file.format(name=workflow_name)
         xml_file = os.path.join(self.cfg_mgr.oozie_workspace,
-                                '{name}.xml'.format(name=workflow_name))
+                                f'{workflow_name}.xml')
         path_exists_cmd = ['hadoop', 'fs', '-test', '-e', xml_file]
         self.logger.info(" ".join(path_exists_cmd))
         path_exists_ret = self.run_subprocess(path_exists_cmd)
         if path_exists_ret != 0:
-            self.logger.error('XML file missing in HDFS: {0}'.format(xml_file))
+            self.logger.error(f'XML file missing in HDFS: {xml_file}')
             return run
 
         command = ['oozie', 'job', '-config', config_file, '-run']
@@ -130,12 +130,12 @@ class Utilities(object):
         output, err = proc.communicate()
         if proc.returncode == 0:
             self.logger.info(output)
-            msg = 'Workflow {0} started - please check Hue'.format(
+            msg = 'Workflow {} started - please check Hue'.format(
                 workflow_name)
             self.logger.info(msg)
             run = True
         else:
-            self.logger.error("Workflow {0} did not run".format(workflow_name))
+            self.logger.error(f"Workflow {workflow_name} did not run")
             self.logger.error(err)
         return run
 
@@ -163,13 +163,13 @@ class Utilities(object):
             os.environ['KRB5_CONFIG'] = "/opt/app/kerberos/prod_krb5.conf"
             keytab = 'fake.keytab'
         else:
-            raise ValueError('Unrecognized --for-env value: {0}'.format(
+            raise ValueError('Unrecognized --for-env value: {}'.format(
                 self.cfg_mgr.for_env))
 
         command = ["kinit", "-S",
                    "krbtgt/{0}.COM@{0}.COM".format(self.cfg_mgr.kerberos),
-                   "fake_username@{0}.COM".format(self.cfg_mgr.kerberos),
-                   "-k", "-t", "/opt/app/kerberos/{0}".format(keytab)]
+                   f"fake_username@{self.cfg_mgr.kerberos}.COM",
+                   "-k", "-t", f"/opt/app/kerberos/{keytab}"]
         proc = subprocess.Popen(command, stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
@@ -200,7 +200,7 @@ class Utilities(object):
                                           workflow_name + '.xml')
         workflow_hdfs_path = os.path.join(temp, workflow_name + '.xml')
         put_cmd = ['hadoop', 'fs', '-put', '-f', workflow_full_path, temp]
-        self.logger.info('Running: {0}'.format(" ".join(put_cmd)))
+        self.logger.info('Running: {}'.format(" ".join(put_cmd)))
         put_status = self.run_subprocess(put_cmd)
         chmod_status = 1
         if put_status == 0:
@@ -210,7 +210,7 @@ class Utilities(object):
         status = (put_status == 0 and chmod_status == 0)
         if status:
             self.logger.info(
-                'Put workflow to hdfs: {0}'.format(workflow_hdfs_path))
+                f'Put workflow to hdfs: {workflow_hdfs_path}')
         return status
 
     def gen_dryrun_workflow(self, workflow_name):
@@ -223,8 +223,8 @@ class Utilities(object):
         temp = '/' + temp_folder + '/'
         new_wf_name = workflow_name + '_dryrun'
         props_path = os.path.join(self.cfg_mgr.files,
-                                  '{0}_job.properties'.format(workflow_name))
-        with open(props_path, 'r') as props_fh:
+                                  f'{workflow_name}_job.properties')
+        with open(props_path) as props_fh:
             lines = props_fh.readlines()
             new_lines = []
             for line in lines:
@@ -235,25 +235,25 @@ class Utilities(object):
                     new_lines.append(new_line)
                 else:
                     new_lines.append(line)
-            dryrun_props_file_name = '{0}_dryrun_job.properties'.format(
+            dryrun_props_file_name = '{}_dryrun_job.properties'.format(
                 workflow_name)
             dryrun_props_path = os.path.join(self.cfg_mgr.files,
                                              dryrun_props_file_name)
             with open(dryrun_props_path, 'wb') as dry_props_fh:
                 dry_props_fh.write("".join(new_lines))
-                msg = "Created temp properties for dryrun: {0}".format(
+                msg = "Created temp properties for dryrun: {}".format(
                     dryrun_props_path)
                 self.logger.info(msg)
             self.chmod_files([dryrun_props_file_name])
 
             wf_path = os.path.join(self.cfg_mgr.files, workflow_name + '.xml')
-            with open(wf_path, 'r') as wf_fh:
+            with open(wf_path) as wf_fh:
                 wf_txt = wf_fh.read()
                 new_wf_path = os.path.join(self.cfg_mgr.files,
                                            new_wf_name + '.xml')
                 with open(new_wf_path, 'wb') as new_wf_fh:
                     new_wf_fh.write(wf_txt)
-                    msg = "Created temp workflow for dryrun: {0}".format(
+                    msg = "Created temp workflow for dryrun: {}".format(
                         new_wf_path)
                     self.logger.info(msg)
                 self.chmod_files([new_wf_name + '.xml'])
@@ -270,13 +270,13 @@ class Utilities(object):
             ret, new_wf_name = self.gen_dryrun_workflow(workflow_name)
             if ret:
                 workflow_name = new_wf_name
-                msg = 'Dry running workflow: {0}.xml'.format(workflow_name)
+                msg = f'Dry running workflow: {workflow_name}.xml'
                 self.logger.info(msg)
                 config_file = os.path.join(self.cfg_mgr.files,
                                            '{0}_job.properties')
                 config_file = config_file.format(workflow_name)
                 cmd = ['oozie', 'job', '-config', config_file, '-dryrun']
-                self.logger.info('Running: {0}'.format(" ".join(cmd)))
+                self.logger.info('Running: {}'.format(" ".join(cmd)))
                 proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE)
@@ -305,9 +305,9 @@ class Utilities(object):
                                 stderr=subprocess.PIPE)
         _, err = proc.communicate()
         if proc.returncode != 0:
-            self.logger.warning('hdfs rm {0} failed!'.format(file_path))
+            self.logger.warning(f'hdfs rm {file_path} failed!')
         else:
-            self.logger.info('success: hdfs rm {0}'.format(file_path))
+            self.logger.info(f'success: hdfs rm {file_path}')
 
     def gen_kornshell(self, workflow_name):
         """Creates kornshell script for jobs scheduled with automation
@@ -319,7 +319,7 @@ class Utilities(object):
         oozie_url = self.cfg_mgr.oozie_url
         oozie_url = oozie_url.replace('/v2/', '')
         output_file = os.path.join(self.cfg_mgr.files,
-                                   '{name}.ksh'.format(name=job_name))
+                                   f'{job_name}.ksh')
         with open(output_file, "wb") as file_out:
             template = Template(filename=self.cfg_mgr.korn_shell_template,
                                 format_exceptions=True)
@@ -329,7 +329,7 @@ class Utilities(object):
                                        kerberos_realm=self.cfg_mgr.kerberos)
             file_out.write(ksh_text)
             self.logger.info(
-                'Generated kornshell script: {0}'.format(output_file))
+                f'Generated kornshell script: {output_file}')
             status = True
         return status
 
@@ -536,7 +536,7 @@ class Utilities(object):
         return getpwuid(os.stat(filename).st_uid).pw_name
 
 
-class WorkflowTablesMapper(object):
+class WorkflowTablesMapper:
 
     """Workflow and table names for printing"""
 

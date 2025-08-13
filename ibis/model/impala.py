@@ -19,7 +19,7 @@ class Impala(Action):
                                      self.params['error'],
                                      self.params['cfg_mgr'])
                 self.execute = self.params['execute']
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Impala KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting Impala action type')

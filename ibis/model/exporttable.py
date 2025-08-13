@@ -5,7 +5,7 @@ from ibis.utilities.sqoop_helper import DRIVERS, \
     ORACLE, DB2, TERADATA, SQLSERVER, MYSQL, VALID_SOURCES
 
 
-class ItTableExport(object):
+class ItTableExport:
 
     """Table representation of columns of it_table"""
 
@@ -219,7 +219,7 @@ class ItTableExport(object):
             return bool(ORACLE in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_teradata(self):
@@ -231,7 +231,7 @@ class ItTableExport(object):
             return bool(TERADATA in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_sqlserver(self):
@@ -243,7 +243,7 @@ class ItTableExport(object):
             return bool(SQLSERVER in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_mysql(self):
@@ -257,7 +257,7 @@ class ItTableExport(object):
                 return False
         else:
             raise ValueError("Unrecognized source found"
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_db2(self):
@@ -268,7 +268,7 @@ class ItTableExport(object):
             return bool(DB2 in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @connection_factories.setter
     def connection_factories(self, val):
@@ -381,7 +381,7 @@ class ItTableExport(object):
                 msg = '{0} did not match. {1} != {2}'
                 msg = msg.format(prp, getattr(self, prp),
                                  getattr(other, prp))
-                print msg
+                print(msg)
                 break
         return isinstance(other, self.__class__) and status
 

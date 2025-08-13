@@ -7,7 +7,7 @@ from ibis.custom_logging import get_logger
 IMPALA_CONN = None
 
 
-class Inventory(object):
+class Inventory:
 
     """Inventory super class."""
 
@@ -95,7 +95,7 @@ class Inventory(object):
             err_msg = err_msg.format(host=self.cfg_mgr.host)
             self.logger.error('Error found in inventory.get_rows. '
                               'Exit process with errors '
-                              '- reason: {0}'.format(err_msg))
+                              '- reason: {}'.format(err_msg))
             self.logger.error(traceback.format_exc())
         return rows
 
@@ -120,7 +120,7 @@ class Inventory(object):
             err_msg = err_msg.format(host=self.cfg_mgr.host)
             self.logger.error(err_msg)
             self.logger.error(traceback.format_exc())
-            _err = 'Error: failed running query: {0}'.format(query)
+            _err = f'Error: failed running query: {query}'
             raise ValueError(_err)
 
     def get_table_mapping(self, db_name, table_name, db_env):

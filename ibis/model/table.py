@@ -9,7 +9,7 @@ from ibis.utilities.sqoop_helper import DRIVERS, \
     ORACLE, DB2, TERADATA, SQLSERVER, MYSQL, POSTGRESQL, VALID_SOURCES
 
 
-class ItTable(object):
+class ItTable:
     """Table representation of columns of it_table"""
 
     def __init__(self, meta_dict, cfg_mgr):
@@ -170,7 +170,7 @@ class ItTable(object):
             return bool(ORACLE in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_teradata(self):
@@ -182,7 +182,7 @@ class ItTable(object):
             return bool(TERADATA in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_sqlserver(self):
@@ -194,7 +194,7 @@ class ItTable(object):
             return bool(SQLSERVER in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_postgresql(self):
@@ -206,7 +206,7 @@ class ItTable(object):
             return bool(POSTGRESQL in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_mysql(self):
@@ -218,7 +218,7 @@ class ItTable(object):
             return bool(MYSQL in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found"
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @property
     def is_db2(self):
@@ -229,7 +229,7 @@ class ItTable(object):
             return bool(DB2 in self.jdbcurl)
         else:
             raise ValueError("Unrecognized source found "
-                             "in: '{0}'".format(self.jdbcurl))
+                             "in: '{}'".format(self.jdbcurl))
 
     @connection_factories.setter
     def connection_factories(self, val):
@@ -330,7 +330,7 @@ class ItTable(object):
         elif value == 'heavy':
             _load = '001'
         else:
-            raise ValueError("Unrecognized load: '{0}'".format(value))
+            raise ValueError(f"Unrecognized load: '{value}'")
         return _load
 
     @property
@@ -422,7 +422,7 @@ class ItTable(object):
         elif value == 'yearly':
             _freq = '111'
         else:
-            raise ValueError("Unrecognized frequency: '{0}'".format(value))
+            raise ValueError(f"Unrecognized frequency: '{value}'")
         return _freq
 
     @property
@@ -544,14 +544,14 @@ class ItTable(object):
             else:
                 msg = ("characters other than Alphabets and Pipe and "
                        "underscore is not allowed in view "
-                       "value: '{0}'").format(_views)
+                       "value: '{}'").format(_views)
                 raise ValueError(Utilities.print_box_msg(msg, border_char='x'))
 
         elif not _views:
             _views = []
         else:
             raise ValueError("Views is a pipe separated "
-                             "value: '{0}'".format(_views))
+                             "value: '{}'".format(_views))
         return _views
 
     @property
@@ -684,7 +684,7 @@ class ItTable(object):
                 msg = '{0} did not match. {1} != {2}'
                 msg = msg.format(prp, getattr(self, prp),
                                  getattr(other, prp))
-                print msg
+                print(msg)
                 break
         return isinstance(other, self.__class__) and status
 

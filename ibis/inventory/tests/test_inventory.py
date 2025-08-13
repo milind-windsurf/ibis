@@ -75,7 +75,7 @@ class InventoryFunctionsTest(unittest.TestCase):
             'call',
             'fake_database',
             'dev')
-        print expected
+        print(expected)
         self.assertDictEqual(expected, result)
 
     @patch.object(Inventory, '_connect', autospec=True)

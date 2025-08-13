@@ -319,16 +319,16 @@ def main():
         with open(cfg_mgr.log_file, 'rb') as file_handler:
             log_text = file_handler.read()
             if log_text:
-                print '+' * 20
-                print 'Printing ibis.log'
-                print '=' * 20
-                print log_text
-                print '+' * 20
+                print('+' * 20)
+                print('Printing ibis.log')
+                print('=' * 20)
+                print(log_text)
+                print('+' * 20)
     else:
         is_failed = True
         err_msg = ('Environment required for ibis. '
                    'Please specify --env argument and provide a environment.')
-        print err_msg
+        print(err_msg)
 
     if is_failed:
         # expose ibis failure to the calling env
@@ -361,21 +361,21 @@ def parse_request_file(args):
 def checks_balances(args):
     """Handler for Checks and balances."""
     if args.db and args.table and args.update_lifespan:
-        print driver.update_lifespan(args.db[0], args.table[0],
-                                     ','.join(args.update_lifespan))
+        print(driver.update_lifespan(args.db[0], args.table[0],
+                                     ','.join(args.update_lifespan)))
     elif args.update_all_lifespan:
-        print driver.update_all_lifespan()
+        print(driver.update_all_lifespan())
     else:
-        print 'Please provide a --db and --table and option[--update-lifespan]'
+        print('Please provide a --db and --table and option[--update-lifespan]')
 
 
 def export(args):
     """Handler for export."""
     if args.db and args.table and args.to:
-        print driver.export(args.db[0], args.table[0], args.to[0])
+        print(driver.export(args.db[0], args.table[0], args.to[0]))
     else:
-        print '--export requires --db {db}, --table {table}, and ' \
-              '--to {db}.{table}'
+        print('--export requires --db {db}, --table {table}, and ' \
+              '--to {db}.{table}')
 
 
 def gen_automation_workflow_tables(args):
@@ -403,17 +403,17 @@ def gen_automation_workflow(args):
     if args.gen_automation_workflow:
         for automation_id in args.gen_automation_workflow:
             success, msg, git_files = driver.gen_prod_workflow(automation_id)
-            print msg
+            print(msg)
     else:
-        print "--gen-automation-workflow requires at least one automation id."
+        print("--gen-automation-workflow requires at least one automation id.")
 
 
 def retrieve_backup(args):
     """Handler for backup."""
     if args.db and args.table:
-        print driver.retrieve_backup(args.db[0], args.table[0])
+        print(driver.retrieve_backup(args.db[0], args.table[0]))
     else:
-        print '--retrieve-backup requires --db {name} --table {name}'
+        print('--retrieve-backup requires --db {name} --table {name}')
 
 
 def run_job(args):
@@ -426,19 +426,19 @@ def run_job(args):
 def gen_it_table(args):
     """Generate IT table with split by."""
     if args.gen_it_table:
-        print "Generating split by and IT table"
+        print("Generating split by and IT table")
         driver.gen_it_table_with_split_by(tables_fh=args.gen_it_table,
                                           timeout=int(args.timeout))
     else:
         err_msg = "Please provide list of tables file with --split-by"
-        print err_msg
+        print(err_msg)
 
 
 def submit_request(args):
     """Generate workflow."""
     status, msg = driver.submit_request(args.submit_request, args.no_git)
     if not status:
-        print msg
+        print(msg)
     return status
 
 
@@ -446,36 +446,36 @@ def export_oracle(args):
     """Handler for oracle export."""
     if len(args.update_key) == 0:
         args.update_key.append("")
-    print driver.export_oracle(args.source_table[0], args.source_db[0],
+    print(driver.export_oracle(args.source_table[0], args.source_db[0],
                                args.source_dir[0], args.jdbc_url[0],
                                args.update_key[0], args.target_table[0],
                                args.target_schema[0], args.user_name[0],
-                               args.pass_alias[0])
+                               args.pass_alias[0]))
 
 
 def save_it_table(args):
     """Handler for saving IT table."""
-    print driver.save_it_table(args.source_type[0])
+    print(driver.save_it_table(args.source_type[0]))
 
 
 def update_it_table(args):
     """Handler for updating IT table."""
-    print driver.submit_it_file(args.update_it_table)
+    print(driver.submit_it_file(args.update_it_table))
 
 
 def update_it_table_export(args):
     """Handler for updating IT table."""
-    print driver.submit_it_file_export(args.update_it_table_export)
+    print(driver.submit_it_file_export(args.update_it_table_export))
 
 
 def ingest_version(args):
     """used of deploying ibis"""
     cfg_mgr = ConfigManager(args.env[0], args.env[0], 'True')
-    print 'Ingest version--', cfg_mgr.hdfs_ingest_version
+    print('Ingest version--', cfg_mgr.hdfs_ingest_version)
     with open('ingest_version.txt', 'w') as file_h:
         file_h.write(cfg_mgr.hdfs_ingest_version)
         file_h.close()
-        print 'Ingest version:', cfg_mgr.hdfs_ingest_version
+        print('Ingest version:', cfg_mgr.hdfs_ingest_version)
 
 
 def gen_kite_workflow(args):
@@ -487,9 +487,9 @@ def export_request(args):
     """Generate workflow export request. """
     status, msg = driver.export_request(args.export_request, args.no_git)
     if not status:
-        print msg
+        print(msg)
         raise ValueError("Workflow not generated - reason: %s" % msg)
-    print msg
+    print(msg)
 
 
 if __name__ == "__main__":

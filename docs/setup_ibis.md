@@ -79,7 +79,7 @@ Follow the below 3 steps:-
 
 - Unix like environment (Mac, Linux)
 
-- Python 2.7.4+
+- Python 3.13+
 
 - requirements.pip (Is executed in IBIS one time setup)
 

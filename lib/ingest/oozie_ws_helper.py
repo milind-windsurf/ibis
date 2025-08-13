@@ -9,7 +9,7 @@ import subprocess
 
 import requests
 from requests_kerberos import HTTPKerberosAuth
-from py_hdfs import PyHDFS
+from hdfs import InsecureClient as PyHDFS
 from impala_utils import ImpalaConnect
 
 
@@ -228,8 +228,8 @@ class OozieWSHelper(object):
             my_json = json.dumps(r.json())
             job = Job(my_json)
         else:
-            print "Error retrieving all jobs. Error code: {status}".format(
-                status=r.status_code)
+            print("Error retrieving all jobs. Error code: {status}".format(
+                status=r.status_code))
         return r.status_code, job
 
     def get_job(self, id_val):
@@ -241,12 +241,12 @@ class OozieWSHelper(object):
         req_get = requests.get(self.oozie_url + query, auth=HTTPKerberosAuth())
         if req_get.status_code == 200:
             my_json = json.dumps(req_get.json())
-            print 'JSON: ', my_json
+            print('JSON: ', my_json)
             workflow_job = Workflow(my_json)
         else:
             err_msg = "Error retrieving job, {id_val}. Error code: {status}"
             err_msg = err_msg.format(id_val=id_val, status=req_get.status_code)
-            print err_msg
+            print(err_msg)
         return req_get.status_code, workflow_job
 
 
@@ -336,7 +336,7 @@ class ChecksBalancesManager(object):
             # Not OK
             err_msg = "Error, {status}, retrieving app name, {app_name}."
             err_msg = err_msg.format(status=status, app_name=app_name)
-            print err_msg
+            print(err_msg)
         else:
             workflows = job.get_workflows()
             if len(workflows) > 1:
@@ -435,7 +435,7 @@ class ChecksBalancesManager(object):
                     "Error found in "
                     "oozie_ws_help.get_input_records - reason %s" % ie.message)
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return records
 
     def get_output_records(self, sqoop_action):
@@ -457,7 +457,7 @@ class ChecksBalancesManager(object):
                 err_msg = err_msg % ie.message
                 raise Exception(err_msg)
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return records
 
     def get_sqoop_duration(self, sqoop_action):
@@ -473,7 +473,7 @@ class ChecksBalancesManager(object):
                 sqoop_action.get_end_time(), '%a, %d %b %Y %H:%M:%S %Z')
             time = (end - start).total_seconds()
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return int(time)
 
     def get_directory(self, action):
@@ -512,7 +512,7 @@ class ChecksBalancesManager(object):
                 err_msg = err_msg % ie.message
                 raise Exception(err_msg)
         else:
-            print "Error. Expecting sqoop action and OK status"
+            print("Error. Expecting sqoop action and OK status")
         return size
 
     def get_parquet_time(self, table_name, actions):
@@ -627,7 +627,7 @@ class ChecksBalancesManager(object):
             stats['table'] = self.get_table_name(action)
             stats['directory'] = self.get_directory(action)
         else:
-            print 'Expecting an import prep action'
+            print('Expecting an import prep action')
         return stats
 
     def validate_in_and_out_counts(self, action):
@@ -655,7 +655,7 @@ class ChecksBalancesManager(object):
             stats['ingest_timestamp'] = action.get_start_time()
             stats['avro_size'] = self.get_avro_size(action)
         else:
-            print 'Expecting an import action.'
+            print('Expecting an import action.')
         return stats
 
     def get_parquet_size(self, table_name, target_dir):
@@ -804,7 +804,7 @@ class ChecksBalancesManager(object):
         # File-based insert/update operation
         pipe_seperated_value = self.prepares_data(record)
         dir_path = self.get_dir_path(record)
-        print pipe_seperated_value
+        print(pipe_seperated_value)
         self.pyhdfs.insert_update(dir_path, pipe_seperated_value)
 
     def prepares_data(self, record):

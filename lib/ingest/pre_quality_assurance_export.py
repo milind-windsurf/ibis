@@ -14,12 +14,16 @@ import logging
 import datetime
 import json
 from abc import ABCMeta, abstractmethod
-from itertools import izip
+from itertools import zip_longest
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 import sql_queries
 from sqoop_utils import SqoopUtils
 from impala_utils import ImpalaConnect
-from py_hdfs import PyHDFS
+from hdfs import InsecureClient as PyHDFS
 
 
 LOG_FILE = 'qa.log'
@@ -107,7 +111,7 @@ class LogHandler(object):
                 "log_time='{0}'")
         msg += '\n' + '#' * 100
         msg = msg.format(_time)
-        print msg
+        print(msg)
         logging.info('Inserted logs to Hive')
 
     def prepares_data(self, format_data):
@@ -1170,7 +1174,7 @@ def main():
 
 if __name__ == '__main__':
     if len(sys.argv) != 14:
-        print "ERROR----> command line args are not proper"
-        print sys.argv
+        print("ERROR----> command line args are not proper")
+        print(sys.argv)
         sys.exit(1)
     main()

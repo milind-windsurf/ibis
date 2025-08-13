@@ -43,8 +43,8 @@ class AutoInventoryFunctionsTest(unittest.TestCase):
         test_str = test_fh.read()
         expected_str = fo_gen.read()
         if not self.strings_equal(test_str, expected_str):
-            print "Generated test file:{0}".format(test_file)
-            print "Fix the file:{0}".format(expected_file)
+            print("Generated test file:{0}".format(test_file))
+            print("Fix the file:{0}".format(expected_file))
             same = False
 
         test_fh.close()
@@ -60,11 +60,11 @@ class AutoInventoryFunctionsTest(unittest.TestCase):
                         expected_str.splitlines()]
         if "".join(expected_str) != "".join(test_str):
             same = False
-            print '\n'
-            print '=' * 100
-            print "\nFiles don't match..."
+            print('\n')
+            print('=' * 100)
+            print("\nFiles don't match...")
             diff = difflib.unified_diff(expected_str, test_str)
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
         return same
 
     @patch.object(AUTOInventory, 'get_rows', return_value=appl_ref_sch)

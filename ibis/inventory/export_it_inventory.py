@@ -141,7 +141,7 @@ class ExportITInventory(Inventory):
     def get_all_tables_export(self):
         """Return a list of all records from it_table_export."""
         tables = []
-        query = 'SELECT * FROM {tbl}'.format(tbl=self.table)
+        query = f'SELECT * FROM {self.table}'
         result = self.get_rows(query)
         if result:
             for table_row in result:

@@ -59,8 +59,8 @@ class DriverFunctionsTest(unittest.TestCase):
         expected_str = fo_gen.read()
 
         if not self.strings_equal(test_str, expected_str):
-            print "Generated test file:{0}".format(test_file)
-            print "Fix the file:{0}".format(expected_file)
+            print("Generated test file:{0}".format(test_file))
+            print("Fix the file:{0}".format(expected_file))
             same = False
 
         test_fh.close()
@@ -76,11 +76,11 @@ class DriverFunctionsTest(unittest.TestCase):
                         expected_str.splitlines()]
         if "".join(expected_str) != "".join(test_str):
             same = False
-            print '\n'
-            print '=' * 100
-            print "\nFiles don't match..."
+            print('\n')
+            print('=' * 100)
+            print("\nFiles don't match...")
             diff = difflib.unified_diff(expected_str, test_str)
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
         return same
 
     def test_submit_it_file_empty(self):
@@ -581,7 +581,7 @@ class DriverFunctionsTest(unittest.TestCase):
         self.driver.it_inventory.get_table_mapping.return_value = light_3_prop
         result = self.driver.export('fake_database', 'fake_cens_tablename',
                                     'fake_domain.fake_database_fake_cens_tablename')
-        print result
+        print(result)
         self.assertIn('_export.xml, generated to', result)
 
     def test_export_no_tbl(self):

@@ -1,5 +1,5 @@
 """Generate hql file."""
-import ConfigParser
+import configparser
 import os
 import re
 import sys
@@ -589,13 +589,13 @@ class ConnectionManager(object):
         returncode, output, err = self.sqoop_obj.eval(query)
 
         if returncode != 0:
-            print '-' * 100
-            print query
-            print '-' * 100
-            print err
-            print '-' * 100
-            print output
-            print '-' * 100
+            print('-' * 100)
+            print(query)
+            print('-' * 100)
+            print(err)
+            print('-' * 100)
+            print(output)
+            print('-' * 100)
             raise ValueError(err)
 
         return output
@@ -606,8 +606,8 @@ class ConnectionManager(object):
         output = self.sqoop_eval(query)
         _, col_rows = self.sqoop_obj.fetch_rows_sqoop(output)
         if not col_rows:
-            print query
-            print output
+            print(query)
+            print(output)
             err_msg = 'Failed - Query returned empty: {0}'.format(query)
             raise ValueError(err_msg)
         ddl_types = DDLTypes(output, self.source, self.ingest_time)
@@ -910,11 +910,11 @@ class ConnectionManager(object):
                             view_full_name)
 
                     else:
-                        print 'No views hql created'
+                        print('No views hql created')
                         views_hql = ''
 
                 except ValueError as ex:
-                    print str(ex)
+                    print(str(ex))
                     if domain:
                         views_hql = (
                             'DROP VIEW IF EXISTS {view_full_name};\n'
@@ -1099,12 +1099,12 @@ def main():
         with open("avro_parquet.hql", "a") as fileh:
             fileh.write(create_ingest_table_hql)
             fileh.write(full_ingest_hql)
-            print 'SUCCESS: created avro_parquet.hql file'
+            print('SUCCESS: created avro_parquet.hql file')
         with open("parquet_live.hql", "a") as fileh:
             fileh.write(create_parquet_live_hql)
-            print 'SUCCESS: created parquet_live.hql file'
+            print('SUCCESS: created parquet_live.hql file')
     else:
-        print 'Error: Unknown rpc_method:{0}'.format(rpc_method)
+        print('Error: Unknown rpc_method:{0}'.format(rpc_method))
 
     view_hql, impl_txt, views_info_txt = conn_mgr.create_externaltable(
         rpc_method)
@@ -1113,23 +1113,23 @@ def main():
         create_view_file = "views.hql"
         with open(create_view_file, 'wb') as fileh:
             fileh.write(view_hql)
-            print 'SUCCESS: created {0} file'.format(create_view_file)
+            print('SUCCESS: created {0} file'.format(create_view_file))
 
     if impl_txt:
         invalidate_views_file = "views_invalidate.txt"
         with open(invalidate_views_file, 'wb') as fileh:
             fileh.write(impl_txt)
-            print 'SUCCESS: created {0} file'.format(invalidate_views_file)
+            print('SUCCESS: created {0} file'.format(invalidate_views_file))
 
     if views_info_txt:
         views_info_file = "views_info.txt"
         with open(views_info_file, 'wb') as fileh:
             fileh.write(views_info_txt)
-            print 'SUCCESS: created {0} file'.format(views_info_file)
+            print('SUCCESS: created {0} file'.format(views_info_file))
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 6:
-        print "command line args are not proper"
+        print("command line args are not proper")
         sys.exit(1)
     main()

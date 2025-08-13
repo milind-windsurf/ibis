@@ -1,6 +1,9 @@
 """Create oozie workflows."""
 import collections
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from pkg_resources import resource_filename
 from mako.template import Template
 from ibis.custom_logging import get_logger
 from ibis.inventor.action_builder import ActionBuilder
@@ -8,7 +11,7 @@ from ibis.utilities.utilities import *
 from ibis.inventor.dsl_parser import DSLParser
 
 
-class WorkflowGenerator(object):
+class WorkflowGenerator:
 
     """Generates a workflow given a list[list[table]].
     Uses templates to generate workflow and metadata and values
@@ -200,7 +203,7 @@ class WorkflowGenerator(object):
         xml = ''
         if table.has_auth_info():
             self.logger.info(
-                "Workflow generation started: {0}".format(table.full_sql_name))
+                f"Workflow generation started: {table.full_sql_name}")
             xml = self.action_builder.gen_full_table_ingest(
                 table, sqoop_to, end_to)
         else:
@@ -215,7 +218,7 @@ class WorkflowGenerator(object):
 
     def list_chunks(self, my_list, num):
         """Gets num sized chunks from list"""
-        for i in xrange(0, len(my_list), num):
+        for i in range(0, len(my_list), num):
             yield my_list[i: i + num]
 
     def set_workflow_start(self, pipelines, is_sub=False):
@@ -236,14 +239,14 @@ class WorkflowGenerator(object):
                     table = pipe[0]
                     action_name = table.table_name + '_import_prep'
                     action_name = Utilities.replace_special_chars(action_name)
-                    self.file_out.write('\t<start to="{0}"/>\n'.format(
+                    self.file_out.write('\t<start to="{}"/>\n'.format(
                         action_name))
                 else:
                     self.file_out.write('\t<start to="job_0"/>\n')
             elif not contains_heavy:
                 if not is_sub:
                     self.file_out.write(
-                        '\t<start to="{0}"/>\n'.format('pipeline0'))
+                        '\t<start to="{}"/>\n'.format('pipeline0'))
                 else:
                     self.file_out.write('\t<start to="job_0"/>\n')
             self.workflow_started = True
@@ -391,7 +394,7 @@ class WorkflowGenerator(object):
                             'end_to': oozie_cb_ok_to})
                     else:
                         wf_name = self._filter_wf(table)
-                        self._write_subwf('job_{id}'.format(id=i),
+                        self._write_subwf(f'job_{i}',
                                           wf_name, end_to)
             else:
                 # More than one table in pipeline
@@ -445,7 +448,7 @@ class WorkflowGenerator(object):
                                         'end_to': oozie_cb_ok_to})
                         else:
                             wf_name = self._filter_wf(table)
-                            self._write_subwf('job_{id}'.format(id=i),
+                            self._write_subwf(f'job_{i}',
                                               wf_name, end_to)
                     else:
                         if not is_sub:
@@ -456,7 +459,7 @@ class WorkflowGenerator(object):
                                         'end_to': next_pipeline})
                         else:
                             wf_name = self._filter_wf(table)
-                            self._write_subwf('job_{id}'.format(id=i),
+                            self._write_subwf(f'job_{i}',
                                               wf_name, 'job_' + str(i + 1))
         if not is_sub:
             self.gen_oozie_cb_action()
@@ -516,11 +519,11 @@ class WorkflowGenerator(object):
         self.file_out.write('    <start to="job_0"/>\n')
         for i, workflow in enumerate(workflow_list):
             if i != len(workflow_list) - 1:
-                props = {'action_name': 'job_{id}'.format(id=i),
+                props = {'action_name': f'job_{i}',
                          'xml_file': workflow,
-                         'ok': 'job_{id}'.format(id=i + 1)}
+                         'ok': f'job_{i + 1}'}
             else:
-                props = {'action_name': 'job_{id}'.format(id=i),
+                props = {'action_name': f'job_{i}',
                          'xml_file': workflow, 'ok': 'oozie_cb_ok'}
             for line in sub_workflow_template:
                 self.file_out.write(
@@ -681,8 +684,8 @@ class WorkflowGenerator(object):
         self.gen_workflow_end()
         self.file_out.close()
         self.logger.info(
-            'Generated incremental workflow: {0}'.format(self.wf_file_path))
-        msg = 'Workflow {0}.xml generated successfully.'.format(
+            f'Generated incremental workflow: {self.wf_file_path}')
+        msg = 'Workflow {}.xml generated successfully.'.format(
             self.workflow_name)
         self.logger.info(msg)
         return True
@@ -730,7 +733,7 @@ class WorkflowGenerator(object):
                     action_name, hdfs_path, script_name, '', error_to_action)
                 actions.append(hive_action)
                 self.logger.info(
-                    'Adding action script: {0}'.format(script_name))
+                    f'Adding action script: {script_name}')
             elif rule.action_id == 'shell_script':
                 action_name = action_name_prefix + '_shell_' + str(index + 1)
                 script_name = self.action_builder.gen_custom_workflow_scripts(
@@ -740,7 +743,7 @@ class WorkflowGenerator(object):
                     action_name, hdfs_path, script_name, '', error_to_action)
                 actions.append(shell_action)
                 self.logger.info(
-                    'Adding action script: {0}'.format(script_name))
+                    f'Adding action script: {script_name}')
 
         for current_action, next_action in Utilities.pairwise(actions):
             current_action.ok = next_action.get_name()
@@ -754,6 +757,6 @@ class WorkflowGenerator(object):
         self.file_out.write(start_node)
         self.file_out.write(workflow_xml)
         self.gen_workflow_end()
-        msg = 'Generated custom workflow: {0}.xml'.format(self.workflow_name)
+        msg = f'Generated custom workflow: {self.workflow_name}.xml'
         self.logger.info(msg)
         return workflow_xml

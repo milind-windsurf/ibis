@@ -25,7 +25,7 @@ OPTIONAL_FIELDS_EXPORT = ['update_key', 'fetch_size',
                           'staging_database']
 
 
-class Request(object):
+class Request:
 
     """Represents fields in request file"""
 
@@ -268,7 +268,7 @@ class Request(object):
         return text
 
 
-class RequestInventory(object):
+class RequestInventory:
 
     """Handles request file"""
 

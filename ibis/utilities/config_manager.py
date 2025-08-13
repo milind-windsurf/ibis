@@ -1,13 +1,16 @@
 """Config Manager."""
-import ConfigParser
+import configparser
 import os
 import sys
 import random
 import string
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from pkg_resources import resource_filename
 
 
-class ConfigManager(object):
+class ConfigManager:
     """Ibis properties value manager.
     Reads from properties file and values can be accessed
     via the Config Manager. Requires path to properties file
@@ -24,9 +27,9 @@ class ConfigManager(object):
             if self.for_env:
                 self.for_env = self.for_env[0]
 
-        env_prop_file = '{env}.properties'.format(env=environment.lower())
+        env_prop_file = f'{environment.lower()}.properties'
         prop_path = resource_filename('resources', env_prop_file)
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(prop_path)
 
         # This is the base dir of this particular file
@@ -187,9 +190,9 @@ class ConfigManager(object):
         """To generate workflow for dev/int on prod."""
         if 'dev' in self.for_env.lower() or 'int' in self.for_env.lower():
             # to make wf generation for all envs possible on prod host
-            env_prop_file = '{env}.properties'.format(env=self.for_env.lower())
+            env_prop_file = f'{self.for_env.lower()}.properties'
             prop_path = resource_filename('resources', env_prop_file)
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.read(prop_path)
             # override the values
             self.it_table = config.get('Database', 'it_table')
@@ -212,19 +215,19 @@ class ConfigManager(object):
 
     def rand_name(self):
         """creates random string"""
-        val = ''.join(random.choice(string.lowercase) for i in range(10))
+        val = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
         return val
 
     def create_path(self, path):
         """Create path when not exists"""
         try:
-            file_permission = 0774
+            file_permission = 0o774
             if not os.path.exists(path):
                 os.makedirs(path)
                 os.chmod(path, file_permission)
         except Exception as e:
-            print "Error: could not create workflow directory, details %s" % e
-            print 'Check for unix permissions. Exiting now...'
+            print("Error: could not create workflow directory, details %s" % e)
+            print('Check for unix permissions. Exiting now...')
             sys.exit(1)
 
     def read_config_wf_props(self, config_workflow_properties):
@@ -235,7 +238,7 @@ class ConfigManager(object):
         prop_file = '{config_wf_props}.properties'.format(
             config_wf_props=config_workflow_properties.lower())
         prop_path = resource_filename('resources', prop_file)
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(prop_path)
         return config
 
@@ -247,5 +250,5 @@ class ConfigManager(object):
         """Obj repr."""
         text = ''
         for data_attribute, value in vars(self).items():
-            text += "{0}: {1}\n".format(*(data_attribute, value))
+            text += "{}: {}\n".format(*(data_attribute, value))
         return text

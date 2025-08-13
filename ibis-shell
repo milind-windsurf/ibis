@@ -30,7 +30,7 @@ echo "Welcome to...
 Version ${IBIS_VERSION}
 "
 
-IBIS_EGG_NAME="${IBIS_APP_NAME}-${IBIS_VERSION}-py2.7.egg"
+IBIS_EGG_NAME="${IBIS_APP_NAME}-${IBIS_VERSION}-py3.13.egg"
 
 if [ "$1" = "--run-int-tests" ]; then
     source ${REPO_HOME}/ibis_venv/bin/activate

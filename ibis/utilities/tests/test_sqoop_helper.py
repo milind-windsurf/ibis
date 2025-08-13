@@ -35,7 +35,7 @@ class SqoopHelperFunctionsTest(unittest.TestCase):
 
         ts_ls = self.sqooper.get_timestamp_columns(col_types, 'jdbc')
         self.assertEquals(
-            cmp(ts_ls, ['T1', 'T2', 'T3', 't4', 'T5', 'T6', 'T7']), 0)
+            ts_ls, ['T1', 'T2', 'T3', 't4', 'T5', 'T6', 'T7'])
 
     def test_get_timestamp_columns_sqlserver(self):
         """test for sql server"""
@@ -46,8 +46,8 @@ class SqoopHelperFunctionsTest(unittest.TestCase):
         jdbc = 'jdbc:sqlserver://fake.sqlserver:5016;database=fake_database'
         ts_ls = self.sqooper.get_timestamp_columns(col_types, jdbc)
         self.assertEquals(
-            cmp(ts_ls, ['CCFEffectiveDate', 'Withdrawn_Date',
-                        'i_1stQtr2013PreJOC']), 0)
+            ts_ls, ['CCFEffectiveDate', 'Withdrawn_Date',
+                        'i_1stQtr2013PreJOC'])
 
     def test_get_lob_columns(self):
         col_types = [['COL1', 'BLOB'], ['COL2', 'VARCHAR2'], ['COL3', 'BFILE'],
@@ -57,8 +57,8 @@ class SqoopHelperFunctionsTest(unittest.TestCase):
 
         lob_ls = self.sqooper.get_lob_columns(col_types, 'jdbc')
         self.assertEquals(
-            cmp(lob_ls,
-                ['COL1', 'COL3', 'COL5', 'COL6', 'COL7', 'COL8', 'COL9']), 0)
+            lob_ls,
+                ['COL1', 'COL3', 'COL5', 'COL6', 'COL7', 'COL8', 'COL9'])
 
     @patch('ibis.utilities.sqoop_helper.subprocess.Popen', autospec=True)
     @patch.object(sys, 'exit', autospec=True)
@@ -84,7 +84,7 @@ class SqoopHelperFunctionsTest(unittest.TestCase):
 
         with self.assertRaises(ValueError) as exp_cm:
             self.sqooper.eval(jdbc, sql_stmt, db_username, password_file)
-        self.assertEquals(exp_cm.exception.message, 'Failed on sqoop eval!')
+        self.assertEquals(str(exp_cm.exception), 'Failed on sqoop eval!')
 
     def test_convert_special_chars(self):
         """test convert_special_chars"""

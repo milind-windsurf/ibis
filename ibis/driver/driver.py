@@ -29,7 +29,7 @@ from ibis.utilities.utilities import Utilities, WorkflowTablesMapper
 from ibis.utilities.vizoozie import VizOozie
 
 
-class Driver(object):
+class Driver:
 
     """Drive the ibis egg by providing methods to be accessed via the CLI."""
 
@@ -167,11 +167,11 @@ class Driver(object):
                     success, msgg = self.it_inventory.update(
                         existing_table_obj)
                     if success:
-                        self.logger.info('Updated: {0}'.format(
+                        self.logger.info('Updated: {}'.format(
                             existing_table_obj.db_table_name))
                         msg += '\n' + msgg
                 else:
-                    self.logger.warning('Nothing to update: {0}'.format(
+                    self.logger.warning('Nothing to update: {}'.format(
                         existing_table_obj.db_table_name))
         return msg
 
@@ -639,7 +639,7 @@ class Driver(object):
         # Break up list of generated files into multiple lists
         max_tbl_per_wrkflw = self.cfg_mgr.max_table_per_workflow
         workflows_chunks = []
-        for num in xrange(0, len(generated_workflows), max_tbl_per_wrkflw):
+        for num in range(0, len(generated_workflows), max_tbl_per_wrkflw):
             _grouped_wf = generated_workflows[num:num + max_tbl_per_wrkflw]
             workflows_chunks.append(_grouped_wf)
         return workflows_chunks
@@ -681,7 +681,7 @@ class Driver(object):
         appl_ids = []
         for table in tables:
             appl_id = table.automation_appl_id
-            self.logger.info('Table: {0} - automation id: {1}'.format(
+            self.logger.info('Table: {} - automation id: {}'.format(
                 table.full_sql_name, repr(appl_id)))
             if not appl_id:
                 # generate and update appl-id
@@ -695,12 +695,12 @@ class Driver(object):
                 else:
                     table.automation_appl_id = appl_id
                     self.it_inventory.update(table)
-                    msg = "Inserted new appl_id: '{0}' for '{1}'".format(
+                    msg = "Inserted new appl_id: '{}' for '{}'".format(
                         appl_id, table.full_sql_name)
                     self.logger.info(msg)
             if appl_id is not None and appl_id not in appl_ids:
                 appl_ids.append(appl_id)
-        self.logger.info('Appl ids: {0}'.format(appl_ids))
+        self.logger.info(f'Appl ids: {appl_ids}')
         for appl_id in appl_ids:
             status, msg, git_files = self.gen_prod_workflow(appl_id)
 
@@ -817,7 +817,7 @@ class Driver(object):
                       "automation_appl_id: '{id}'\n".format(id=appl_id)
             err_msg += traceback.format_exc()
             err_msg = 'Error found in driver.gen_prod_workflow - ' \
-                      'reason: \n{0}'.format(err_msg)
+                      'reason: \n{}'.format(err_msg)
             self.logger.error(err_msg)
             msg = err_msg
         return status, msg, git_files
@@ -880,7 +880,7 @@ class Driver(object):
         except IndexError as err:
             msg += 'Please provide an appropriate --to {db}.{table}'
             self.logger.error('Error found in driver.export - '
-                              'reason: %s ' % err.message)
+                              'reason: %s ' % str(err))
         return msg
 
     def export_database(self, tables):
@@ -1001,7 +1001,7 @@ class Driver(object):
     def auth_test(self, jdbc_url, source_db, source_table, user_name,
                   password_file):
         """Test sqoop auth"""
-        print jdbc_url, source_db, source_table, user_name, password_file
+        print(jdbc_url, source_db, source_table, user_name, password_file)
         auth_obj = AuthTest(self.cfg_mgr, source_db, source_table, jdbc_url)
         status = auth_obj.verify(user_name, password_file)
         if not status:
@@ -1086,7 +1086,7 @@ class Driver(object):
                     self.logger.error('Error found in driver.retrieve'
                                       '_backup, exit '
                                       'from process with errors. '
-                                      'Subprocess error: %s' % e.message)
+                                      'Subprocess error: %s' % str(e))
                     raise ValueError('Failed')
             else:
                 msg += 'Target directory doesn\'t exist in it_table.\n'
@@ -1148,7 +1148,7 @@ class Driver(object):
                               'load value'.\
                     format(table=table['full_table_name'])
                 self.logger.error('Error found in driver.update_'
-                                  'all_lifespan -reason %s ' % ie.message)
+                                  'all_lifespan -reason %s ' % str(ie))
         return msg
 
     def update_it_table_export(self, request_tables, msg):
@@ -1184,11 +1184,11 @@ class Driver(object):
                     success, msgg = self.export_it_inventory.update_export(
                         modified_table_obj)
                     if success:
-                        self.logger.info('Updated: {0}'.format(
+                        self.logger.info('Updated: {}'.format(
                             modified_table_obj.db_table_name))
                         msg += '\n' + msgg
                 else:
-                    self.logger.warning('Nothing to update: {0}'.format(
+                    self.logger.warning('Nothing to update: {}'.format(
                         modified_table_obj.db_table_name))
         return msg
 
@@ -1284,7 +1284,7 @@ class Driver(object):
         if queue_name:
             # setup custom queue name
             self.cfg_mgr.queue_name = queue_name
-            self.logger.info("Queue name set to: '{0}'".format(queue_name))
+            self.logger.info(f"Queue name set to: '{queue_name}'")
 
         scripts_dir = os.path.abspath(config_file.name).rsplit('/', 1)[-2]
         msg = 'Assuming files are in directory: {0}'

@@ -4,7 +4,7 @@
 '''
 
 
-class Freq_Ingest(object):
+class Freq_Ingest:
 
     '''
     acts as a model class for freq_ingest table. all the values are set and

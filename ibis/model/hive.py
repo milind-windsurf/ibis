@@ -22,7 +22,7 @@ class Hive(Action):
                                      self.params['cfg_mgr'])
                 self.script = self.params['script']
                 # self.logger.info("Hive action successful")
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Hive KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting hive action type')

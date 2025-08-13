@@ -65,8 +65,8 @@ def remove_pyc_files():
             os.remove(file_name)
             cnt += 1
         except OSError:
-            print 'Could not delete file:{0}'.format(file_name)
-    print "Deleted {0}/{1} .pyc files".format(cnt, len(pyc_files))
+            print('Could not delete file:{0}'.format(file_name))
+    print("Deleted {0}/{1} .pyc files".format(cnt, len(pyc_files)))
 
 # Main test suite for running all of the test classes
 if __name__ == '__main__':
@@ -115,8 +115,8 @@ if __name__ == '__main__':
     results = runner.run(big_suite)
 
     if len(results.errors) != 0 or len(results.failures) != 0:
-        print 'Unit tests failed!'
-        print """\n\033[91m
+        print('Unit tests failed!')
+        print("""\n\033[91m
                       ,-------------.                                    \001
                      ( Tests failed! )                         .-.       \001
                       `-------------' _                         \ \      \001
@@ -132,7 +132,7 @@ if __name__ == '__main__':
                                               / ,' /  ,'        \ \ \ \  \001
                                              / /  / ,'          (,_)(,_) \001
                                             (,;  (,,)                    \001
-        \033[0m"""
+        \033[0m""")
         sys.exit(1)
     else:
-        print 'All tests passed.'
+        print('All tests passed.')

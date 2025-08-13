@@ -6,7 +6,7 @@ from requests_kerberos import HTTPKerberosAuth
 from ibis.custom_logging import get_logger
 
 
-class OozieAPi(object):
+class OozieAPi:
     """handles oozie api"""
 
     def __init__(self, cfg_mgr):

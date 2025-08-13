@@ -239,7 +239,7 @@ class DB2TableTest(unittest.TestCase):
         table_obj = ItTable(self.mock_claim_tbl_dict_DB2[0], self.cfg_mgr)
         split_by_obj = Get_Auto_Split(self.cfg_mgr)
         result = split_by_obj.get_split_by_column(table_obj)
-        print "Result: ", result
+        print("Result: ", result)
         self.assertEquals(result, "KEY")
 
     @patch.object(SourceTable, 'eval', autospec=True)
@@ -267,7 +267,7 @@ class DB2TableTest(unittest.TestCase):
         table_obj = ItTable(self.mock_claim_tbl_dict_DB2[0], self.cfg_mgr)
         split_by_obj = Get_Auto_Split(self.cfg_mgr)
         result = split_by_obj.get_split_by_column(table_obj)
-        print "Result: ", result
+        print("Result: ", result)
         self.assertEquals(result, "KEY")
 
     @patch.object(SourceTable, 'eval', autospec=True)
@@ -287,7 +287,7 @@ class DB2TableTest(unittest.TestCase):
         table_obj = ItTable(self.mock_claim_tbl_dict_DB2[0], self.cfg_mgr)
         split_by_obj = Get_Auto_Split(self.cfg_mgr)
         result = split_by_obj.get_split_by_column(table_obj)
-        print "Result: ", result
+        print("Result: ", result)
         self.assertEquals(result, "KEY")
 
     @patch.object(SourceTable, 'eval', autospec=True)
@@ -310,7 +310,7 @@ class DB2TableTest(unittest.TestCase):
         table_obj = ItTable(self.mock_claim_tbl_dict_DB2[0], self.cfg_mgr)
         split_by_obj = Get_Auto_Split(self.cfg_mgr)
         result = split_by_obj.get_split_by_column(table_obj)
-        print "Result: ", result
+        print("Result: ", result)
         self.assertEquals(result, "KEY")
 
     @patch.object(SourceTable, 'eval', autospec=True)
@@ -333,7 +333,7 @@ class DB2TableTest(unittest.TestCase):
         table_obj = ItTable(self.mock_claim_tbl_dict_DB2[0], self.cfg_mgr)
         split_by_obj = Get_Auto_Split(self.cfg_mgr)
         result = split_by_obj.get_split_by_column(table_obj)
-        print "Result: ", result
+        print("Result: ", result)
         self.assertEquals(result, "no-split")
 
     def tearDown(self):

@@ -6,7 +6,7 @@ from ibis.utilities.utilities import Utilities
 from ibis.custom_logging import get_logger
 
 
-class WorkflowRule(object):
+class WorkflowRule:
 
     """Workflow rules based on custom dsl config"""
 
@@ -74,7 +74,7 @@ class WorkflowRule(object):
         return text
 
 
-class DSLParser(object):
+class DSLParser:
 
     """Parser for ibis dsl"""
 
@@ -142,7 +142,7 @@ class DSLParser(object):
                 wf_rule = WorkflowRule('shell_script')
                 wf_rule.custom_action_script = action_id
             else:
-                err_msg = 'Unsupported action type: {0}'.format(action_id)
+                err_msg = f'Unsupported action type: {action_id}'
                 raise ValueError(err_msg)
             rules.append(wf_rule)
         return rules

@@ -21,7 +21,7 @@ class SSH(Action):
                                      self.params['error'],
                                      self.params['cfg_mgr'])
                 self.execute = self.params['execute']
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Ssh KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting Ssh action type')

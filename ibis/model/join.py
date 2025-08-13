@@ -17,7 +17,7 @@ class Join(Control):
                       self).__init__(self.params['action_type'],
                                      self.params['name'],
                                      self.params['cfg_mgr'])
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Join KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting join control type')

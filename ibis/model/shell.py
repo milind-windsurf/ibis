@@ -21,7 +21,7 @@ class Shell(Action):
                                      self.params['cfg_mgr'])
                 self.execute = self.params['execute']
                 # self.logger.info("Shell action Executed Successfully")
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Shell KeyError - reason "%s"' % str(e))
         else:
             self.logger.error('Invalid expecting shell action type')
