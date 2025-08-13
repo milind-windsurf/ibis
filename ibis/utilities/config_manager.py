@@ -31,7 +31,7 @@ class ConfigManager(object):
 
         # This is the base dir of this particular file
         # for example:
-        # /Users/USERNAME/Desktop/ibis/dist/Ibis-0.3.0-py2.7.egg
+        # /Users/USERNAME/Desktop/ibis/dist/Ibis-0.3.0-py3.x.egg
         # /ibis/utilities/config_manager.pyc
         # we then take up a few knotches, to just get
         # /Users/USERNAME/Desktop/ibis/
