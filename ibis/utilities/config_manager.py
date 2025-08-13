@@ -4,7 +4,10 @@ import os
 import sys
 import random
 import string
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from pkg_resources import resource_filename
 
 
 class ConfigManager(object):

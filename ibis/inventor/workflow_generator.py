@@ -1,6 +1,9 @@
 """Create oozie workflows."""
 import collections
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from pkg_resources import resource_filename
 from mako.template import Template
 from ibis.custom_logging import get_logger
 from ibis.inventor.action_builder import ActionBuilder
@@ -215,7 +218,7 @@ class WorkflowGenerator(object):
 
     def list_chunks(self, my_list, num):
         """Gets num sized chunks from list"""
-        for i in xrange(0, len(my_list), num):
+        for i in range(0, len(my_list), num):
             yield my_list[i: i + num]
 
     def set_workflow_start(self, pipelines, is_sub=False):

@@ -1,6 +1,9 @@
 import os
 from ibis.custom_logging import get_logger
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from pkg_resources import resource_filename
 from mako.template import Template
 
 
@@ -30,8 +33,12 @@ class Control(object):
 
     def generate_action(self):
         """Return XML workflow control."""
-        template_file = resource_filename('resources.templates',
-                                          '{action}.xml.mako'.
-                                          format(action=self.action_type))
+        try:
+            template_file = str(files('resources.templates').joinpath(
+                '{action}.xml.mako'.format(action=self.action_type)))
+        except (ImportError, AttributeError):
+            template_file = resource_filename('resources.templates',
+                                              '{action}.xml.mako'.
+                                              format(action=self.action_type))
         template = Template(filename=template_file, format_exceptions=True)
         return template.render(node=self)
