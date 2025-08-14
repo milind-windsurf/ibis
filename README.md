@@ -25,6 +25,35 @@ SQL Server, and DB2).
 
 ### Refer here on [How to setup IBIS?](/docs/setup_ibis.md)
 
+## 🐍 Python 3 Migration
+
+**IMPORTANT**: IBIS has been migrated from Python 2.7.8 to Python 3.6+ as of August 2025.
+
+### Quick Migration Summary
+- **Python Version**: Now requires Python 3.6+ (previously Python 2.7.8)
+- **System Dependencies**: Updated to use `python3-devel`, `python3-setuptools`
+- **Build Process**: Now uses `python3` command for egg building
+- **Egg Files**: Updated naming from `py2.7.egg` to `py3.x.egg`
+
+### Updated Setup Requirements
+```bash
+# Install Python 3 development packages (RHEL/CentOS)
+sudo yum install python3-devel python3-setuptools python3-setuptools-devel
+
+# Run setup (now validates Python 3.6+)
+sh setup.sh
+
+# Build with Python 3
+cd ibis_build && sh build.sh /path/to/ibis
+```
+
+### Migration Status
+- ✅ **Phase 1 Complete**: Environment and build system updates
+- 🔄 **Phase 2 Planned**: Python syntax updates (print statements, imports)
+- 🔄 **Phase 3 Planned**: Dependency compatibility updates
+
+📖 **For detailed migration information, troubleshooting, and rollback instructions, see [PYTHON3_MIGRATION.md](PYTHON3_MIGRATION.md)**
+
 ## Purpose
 
 Creating XMLs is a painful process, especially when including many other steps

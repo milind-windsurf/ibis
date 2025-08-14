@@ -3,7 +3,7 @@
 # Prerequisites:
 # 1. Unix like environment (Unix, Linux, Mac)
 # 2. Hadoop eco-systems
-# 3. Python 2.7
+# 3. Python 3.6+
 #
 #
 # This setup.sh to be executed once when installing IBIS for the first time.
@@ -11,7 +11,7 @@
 #	1. Validates the Operating System. Fails if it's not a Unix like 
 #	   environment (linx, AIX, Mac)
 #   2. Checks Hadoop installation.
-#	3. Checks the installed Python version. Fails if version is not as 2.7  
+#	3. Checks the installed Python version. Fails if version is not 3.6+  
 #   4. Creates the required directories in the local file system and 
 #      in the HDFS as well.
 #   5. Installs Python's libraries required for IBIS
@@ -63,9 +63,9 @@ verify_hadoop_installation() {
 validate_python_version() {
 	echo "Checking Python version..."
 	unsupported_version=false
-	supported_major_ver="2"
+	supported_major_ver="3"
 
-	pyver=`python -c 'import sys; print sys.version_info[:]'`
+	pyver=`python3 -c 'import sys; print(sys.version_info[:])'`
 	echo "Current Python version: ${pyver}"
 	IFS=','
 	pyver=(${pyver:1:${#pyver}-2})
@@ -75,7 +75,7 @@ validate_python_version() {
 	unset IFS
 
 	if [ "$major_ver" -eq "$supported_major_ver" ]; then
-		if [ $minor_ver -lt 7 ]; then
+		if [ $minor_ver -lt 6 ]; then
 			unsupported_version=true
 		fi
 	else
@@ -83,7 +83,7 @@ validate_python_version() {
 	fi
 
 	if $unsupported_version; then
-		echo "Unsupported Python version. Require 2.7.x"
+		echo "Unsupported Python version. Require 3.6+"
 		exit 1
 	fi
 }
@@ -94,8 +94,8 @@ check_prerequisites() {
 	verify_hadoop_installation
 	validate_python_version	
 	sudo yum groupinstall -y "development tools"
-	sudo yum install krb5-devel gcc zlib-devel gcc-c++ python-devel cyrus-sasl-devel openssl openssl-devel libffi-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel snappy-devel expat-devel patch -y --skip-broken
-	sudo  yum --nogpgcheck -y install unzip sudo vim wget which tar gzip graphviz python-setuptools python-setuptools-devel shadow-utils git net-tools libXtst.x86_64
+	sudo yum install krb5-devel gcc zlib-devel gcc-c++ python3-devel cyrus-sasl-devel openssl openssl-devel libffi-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel snappy-devel expat-devel patch -y --skip-broken
+	sudo  yum --nogpgcheck -y install unzip sudo vim wget which tar gzip graphviz python3-setuptools python3-setuptools-devel shadow-utils git net-tools libXtst.x86_64
 }
 
 install_py_libs() {
