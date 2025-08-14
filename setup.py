@@ -2,7 +2,6 @@
 import os
 from setuptools import setup, find_packages
 from setuptools.command.install import install
-from pip.req import parse_requirements
 
 
 def read(fname):
