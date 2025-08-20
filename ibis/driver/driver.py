@@ -1301,3 +1301,26 @@ class Driver(object):
                      wf_name + '.ksh', wf_name + '_props_job.xml']
         # include custom scripts
         gen_files += wf_gen.action_builder.custom_action_scripts
+
+    def validate_docker_images(self):
+        """Validate docker images for existence and basic metadata.
+        Returns:
+            bool: True if validation successful, False otherwise
+        """
+        from ibis.utilities.docker_validator import DockerValidator
+        
+        docker_images = [
+            'ads-rnr/apt-ads-airflow-prod',
+            'ads-rnr/apt-ads-airflow-prod-tf27',
+            'ads-rnr/apt-ads-airflow-prod-tf29',
+            'ads-rnr/apt-ads-dl-tf2',
+            'ads-rnr/apt-ads-dl-tf25',
+            'ads-rnr/apt-ads-dl-tf28',
+            'ads-rnr/apt-ads-gai',
+            'adw/adw-3.5-3.1',
+            'adw/adw-external-gspread',
+            'adw/adw-image-3.4'
+        ]
+        
+        validator = DockerValidator(self.cfg_mgr)
+        return validator.validate_images(docker_images)

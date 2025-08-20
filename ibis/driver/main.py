@@ -248,6 +248,9 @@ def main():
                         help='Get the ingest version used for the xml')
     parser.add_argument('--kite-ingest', type=FileType('r'),
                         help='Used to generate kite-ingest workflow')
+    parser.add_argument('--docker-image-validation', action='store_true',
+                        help='Validate docker images for existence and basic metadata. '
+                             'Validates predefined list of company docker images.')
 
     args = parser.parse_args()
 
@@ -277,7 +280,8 @@ def main():
         'auth_test': auth_test,
         'ingest_version': ingest_version,
         'parse_request_file': parse_request_file,
-        'kite_ingest': gen_kite_workflow
+        'kite_ingest': gen_kite_workflow,
+        'docker_image_validation': docker_image_validation
     }
 
     is_failed = False
@@ -490,6 +494,11 @@ def export_request(args):
         print msg
         raise ValueError("Workflow not generated - reason: %s" % msg)
     print msg
+
+
+def docker_image_validation(args):
+    """Handler for docker image validation."""
+    return driver.validate_docker_images()
 
 
 if __name__ == "__main__":
